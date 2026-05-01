@@ -2,6 +2,9 @@ const $ = (selector) => document.querySelector(selector);
 const results = $('#results');
 const summary = $('#summary');
 const toast = $('#toast');
+const reportBox = $('#reportBox');
+
+let lastReport = 'עדיין לא הורצה בדיקה.';
 
 function showToast(message, ok = true) {
   toast.textContent = message;
@@ -24,15 +27,32 @@ async function fetchText(url) {
   return { response, text };
 }
 
+function buildReport(rows, ok, warn, bad) {
+  const lines = [];
+  lines.push('colors QA mobile report');
+  lines.push(`url=${location.href}`);
+  lines.push(`userAgent=${navigator.userAgent}`);
+  lines.push(`viewport=${window.innerWidth}x${window.innerHeight}`);
+  lines.push(`result=${ok} ok, ${warn} warn, ${bad} bad`);
+  lines.push('checks:');
+  for (const row of rows) {
+    lines.push(`- ${row.status.toUpperCase()} | ${row.name} | ${row.details}`);
+  }
+  lines.push('manual still required: צפה, העתק Prompt ל-GPT, הוסף לחבילה, העתק Prompt חבילה, הדבקה בצ׳אט.');
+  return lines.join('\n');
+}
+
 async function runAllChecks() {
   results.innerHTML = '';
   summary.textContent = 'מריץ בדיקות...';
   let ok = 0;
   let warn = 0;
   let bad = 0;
+  const rows = [];
 
   const record = (name, status, details) => {
     addResult(name, status, details);
+    rows.push({ name, status, details });
     if (status === 'ok') ok += 1;
     if (status === 'warn') warn += 1;
     if (status === 'bad') bad += 1;
@@ -98,18 +118,29 @@ async function runAllChecks() {
   summary.textContent = `תוצאה: ${ok} תקין, ${warn} אזהרות, ${bad} נכשלו.`;
   summary.style.background = bad ? '#FEF2F2' : warn ? '#FFFBEB' : '#ECFDF5';
   summary.style.color = bad ? '#7F1D1D' : warn ? '#92400E' : '#065F46';
+  lastReport = buildReport(rows, ok, warn, bad);
+  reportBox.textContent = lastReport;
 }
 
-async function copyTest() {
-  const text = $('#copyValue').textContent.trim();
+async function copyText(text, successMessage) {
   try {
     await navigator.clipboard.writeText(text);
-    showToast('הועתק בהצלחה');
+    showToast(successMessage);
   } catch (error) {
     showToast('ההעתקה נכשלה בדפדפן הזה', false);
   }
 }
 
+async function copyTest() {
+  const text = $('#copyValue').textContent.trim();
+  await copyText(text, 'הועתק בהצלחה');
+}
+
+async function copyReport() {
+  await copyText(lastReport, 'סיכום הבדיקה הועתק');
+}
+
 $('#runAll').addEventListener('click', runAllChecks);
 $('#copyTest').addEventListener('click', copyTest);
+$('#copyReport').addEventListener('click', copyReport);
 runAllChecks();
