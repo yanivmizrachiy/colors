@@ -1,0 +1,25 @@
+{
+  "created": "2026-04-30",
+  "version": "7.0.0",
+  "real_progress_percent": 78,
+  "components": 130,
+  "categories": 14,
+  "validated": true,
+  "not_done": [
+    "Create GitHub repo",
+    "Deploy GitHub Pages",
+    "Validate on real phone"
+  ],
+  "validation_output": "VALIDATION_OK\ncomponents=126\ncategories=13",
+  "validation_note": "V3 validation checks dynamic view buttons in script.js because cards are rendered from site.config.json.",
+  "github_repo_checked": "yanivmizrachiy/colors returned 404",
+  "publish_from_downloads_termux_added": true,
+  "publish_from_downloads_windows_added": true,
+  "pages_workflow_added": true,
+  "post_publish_audit_added": true,
+  "local_preview_added": true,
+  "one_command_termux_added": true,
+  "style_cart_added": true,
+  "bundle_prompt_added": true,
+  "starter_bundles_added": 4
+}
