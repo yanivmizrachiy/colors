@@ -1,76 +1,65 @@
-# STATUS — colors V3
+# STATUS — colors
 
-בוצע:
-- 126 רכיבים.
-- כפתורי צפייה.
-- תצוגה מוגדלת.
-- העתקה מהירה.
-- Prompts משופרים.
-- בדיקות validate.
+תאריך עדכון: 2026-05-01
 
-לא בוצע:
-- ריפו GitHub.
-- GitHub Pages.
-- בדיקה בטלפון.
+## סטטוס נוכחי
 
-התקדמות אמיתית: 55%
+התקדמות אמיתית: 98%
 
+## אומת בפועל
 
----
+- ריפו GitHub קיים: `yanivmizrachiy/colors`.
+- הריפו ציבורי.
+- default branch: `main`.
+- push ל־`main` הצליח.
+- קומיט ראשוני עלה:
+  - `483fa8f47085ac535f1ac5863b1b2d80bbba3fa3`
+  - `Initial colors V7 design system app`
+- GitHub Pages מחזיר HTML מהכתובת החיצונית:
+  - `https://yanivmizrachiy.github.io/colors/`
+- `site.config.json` נטען מהכתובת החיצונית ומכיל `components`.
+- בדיקות Termux מקומיות עברו:
+  - `VALIDATION_OK`
+  - `components=130`
+  - `categories=14`
+  - `COLORS_DOCTOR_OK`
+  - `copy_payloads=130`
+  - `strong_prompts=130`
+  - `real_colors=50`
+  - `dynamic_view_buttons=130`
 
-# V5 — מסלול פרסום חכם
+## יכולות קיימות בקוד
 
-בוצע:
-- נוסף סקריפט Termux שמוצא את ZIP ההורדה ומפרסם ל-GitHub.
-- נוסף סקריפט Windows שמוצא את ZIP ההורדה ומפרסם ל-GitHub.
-- נוספה תוכנית פרסום `STATE/PUBLISH_PLAN.md`.
-- נוספה בדיקת `doctor.js` קשיחה יותר.
-- נוספה פריסת GitHub Pages דרך Actions.
+- 130 רכיבי עיצוב אמיתיים.
+- 50 צבעים אמיתיים עם HEX/HSL.
+- 14 קטגוריות.
+- כפתור `צפה` לכל רכיב.
+- תצוגה מוגדלת לכל רכיב.
+- כפתור `העתק Prompt ל-GPT` לכל רכיב.
+- העתקת CSS / צבע / קישור / מזהה.
+- חיפוש וסינון.
+- מועדפים.
+- נבחר לאחרונה.
+- `חבילת הסגנון שלי` / Style Cart.
+- כפתור `העתק Prompt חבילה`.
+- GitHub Pages workflow.
+- בדיקות `validate.js` ו־`doctor.js`.
 
-התקדמות אמיתית: 68%
+## עדיין לא אומת
 
-לא בוצע:
-- ריפו GitHub בפועל.
-- Pages חי.
-- בדיקת טלפון.
+- פתיחה ידנית של האתר בדפדפן הטלפון.
+- לחיצה בפועל על `צפה` בטלפון.
+- לחיצה בפועל על `העתק Prompt ל-GPT` בטלפון.
+- הדבקה בפועל של Prompt שהועתק מהאתר לתוך GPT.
+- שימוש בפועל ב־`הוסף לחבילה` וב־`העתק Prompt חבילה` בטלפון.
+- בדיקה שאין גלילה אופקית בטלפון.
 
+## כלל אמת
 
----
+אין לסמן 100% עד שכל בדיקות הטלפון הידניות יעברו בפועל.
 
-# V6 — בדיקה אחרי פרסום ונוחות טלפון
+## קישורים
 
-בוצע:
-- נוסף `scripts/post-publish-audit.js` לבדיקת Pages אחרי פרסום.
-- נוסף `scripts/check-pages-termux.sh` שפותח את האתר בטלפון אחרי בדיקה.
-- נוסף `scripts/check-pages-windows.ps1`.
-- נוסף `scripts/local-preview-termux.sh` לבדיקה מקומית לפני פרסום.
-- נוסף `docs/POST_PUBLISH_QA.md`.
-- נוצר קובץ פקודה אחת לטלפון: `colors_termux_one_command.txt`.
-
-התקדמות אמיתית: 72%
-
-עדיין חסר:
-- הרצה בפועל בטלפון/Windows.
-- יצירת ריפו GitHub בפועל.
-- בדיקת GitHub Pages חיה.
-
-
----
-
-# V7 — חבילת סגנון / Prompt Builder
-
-בוצע:
-- נוסף אזור `חבילת הסגנון שלי`.
-- נוסף כפתור `הוסף לחבילה` לכל רכיב.
-- נוסף כפתור `העתק Prompt חבילה`.
-- נוסף ניקוי בחירה.
-- הבחירה נשמרת ב־LocalStorage.
-- נוספו חבילות סגנון מוכנות.
-- נוספה בדיקת איכות לקיום Style Cart ו־bundlePrompt.
-
-התקדמות אמיתית: 78%
-
-עדיין חסר:
-- ריפו GitHub חי.
-- GitHub Pages חי.
-- בדיקה בטלפון אמיתי.
+- אתר: `https://yanivmizrachiy.github.io/colors/`
+- ריפו: `https://github.com/yanivmizrachiy/colors`
+- Actions: `https://github.com/yanivmizrachiy/colors/actions`
