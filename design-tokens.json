@@ -1,0 +1,125 @@
+{
+  "project": {
+    "name": "colors-smart-builder",
+    "version": "1.0.0",
+    "language": "he",
+    "dir": "rtl",
+    "truthRule": "רכיבים אמיתיים בלבד: צבעים, גופנים, גדלים, CSS ו-Prompts שימושיים ל-GPT."
+  },
+  "uses": [
+    "רקע אתר",
+    "כותרת ראשית",
+    "כותרת אזור",
+    "כפתור ראשי",
+    "כפתור העתקה",
+    "טבלה",
+    "מסגרת",
+    "גופן גוף",
+    "גופן כותרת",
+    "גודל טקסט",
+    "אתר מתמטיקה",
+    "אתר פרימיום",
+    "אפליקציה לנייד",
+    "דשבורד",
+    "דף מידע"
+  ],
+  "tokens": [
+    {
+      "id": "color-bg-premium-blue",
+      "category": "צבעים",
+      "type": "color",
+      "name": "רקע כחול פרימיום",
+      "value": "#0F172A",
+      "hsl": "hsl(222 47% 11%)",
+      "use": ["רקע אתר", "כותרת ראשית", "אתר מתמטיקה", "דשבורד"],
+      "css": ":root{--bg-premium-blue:#0F172A;}",
+      "prompt": "השתמש בצבע #0F172A כרקע כחול כהה פרימיום באתר. מתאים במיוחד ל-Hero, דשבורד, אתר מתמטיקה או אזור פתיחה. שמור על טקסט לבן/בהיר עם ניגודיות גבוהה, RTL מלא, התאמה לנייד ולמחשב, ללא דמו או placeholder, והפרדה בין HTML, CSS ו-JavaScript."
+    },
+    {
+      "id": "color-action-blue",
+      "category": "צבעים",
+      "type": "color",
+      "name": "כחול פעולה לכפתורים",
+      "value": "#2563EB",
+      "hsl": "hsl(221 83% 53%)",
+      "use": ["כפתור ראשי", "כפתור העתקה", "קישור", "אפליקציה לנייד"],
+      "css": ":root{--action-blue:#2563EB;}",
+      "prompt": "השתמש בצבע #2563EB עבור כפתור פעולה ראשי או כפתור העתקה. הכפתור צריך להיות בולט, נוח ללחיצה בטלפון, עם טקסט לבן, radius גדול, hover/focus ברור, RTL מלא, וללא דמו או placeholder."
+    },
+    {
+      "id": "color-luxury-gold",
+      "category": "צבעים",
+      "type": "color",
+      "name": "זהב יוקרתי",
+      "value": "#D4AF37",
+      "hsl": "hsl(46 65% 52%)",
+      "use": ["אתר פרימיום", "מסגרת", "כפתור ראשי", "כותרת ראשית"],
+      "css": ":root{--luxury-gold:#D4AF37;}",
+      "prompt": "השתמש בצבע #D4AF37 כנגיעת זהב יוקרתית. מתאים למסגרות, כפתורים, הדגשות וכותרות באתר פרימיום. לא להשתמש בו על כל הדף אלא כהדגשה מדויקת. שמור על RTL, ניגודיות טובה, התאמה לנייד, וללא דמו או placeholder."
+    },
+    {
+      "id": "font-heebo-ui",
+      "category": "גופנים",
+      "type": "font",
+      "name": "Heebo — ממשק מודרני",
+      "value": "Heebo",
+      "fallback": "Arial, sans-serif",
+      "use": ["גופן גוף", "גופן כותרת", "אתר מתמטיקה", "אפליקציה לנייד"],
+      "css": "@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;800&display=swap');\nbody{font-family:'Heebo',Arial,sans-serif;}",
+      "prompt": "השתמש בגופן Heebo כגופן הראשי של האתר. מתאים לממשקים בעברית, אתרי מורים, מתמטיקה ואפליקציות. טען דרך Google Fonts עם משקלים 400/600/800, הוסף fallback של Arial/sans-serif, שמור על RTL מלא, קריאות גבוהה, וללא דמו או placeholder."
+    },
+    {
+      "id": "font-assistant-reading",
+      "category": "גופנים",
+      "type": "font",
+      "name": "Assistant — קריאה נעימה",
+      "value": "Assistant",
+      "fallback": "Arial, sans-serif",
+      "use": ["גופן גוף", "דף מידע", "טבלה", "אתר מתמטיקה"],
+      "css": "@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;800&display=swap');\nbody{font-family:'Assistant',Arial,sans-serif;}",
+      "prompt": "השתמש בגופן Assistant לטקסטים ארוכים ודפי מידע בעברית. הוא מתאים לקריאה נוחה, דפי לימוד, טבלאות והסברים. שמור על RTL, line-height נוח, התאמה לנייד, וללא דמו או placeholder."
+    },
+    {
+      "id": "size-hero-fluid",
+      "category": "גדלים",
+      "type": "font-size",
+      "name": "Hero רספונסיבי",
+      "value": "clamp(2rem, 6vw, 4.5rem)",
+      "px": "32px–72px",
+      "use": ["כותרת ראשית", "אפליקציה לנייד", "אתר פרימיום"],
+      "css": ".hero-title{font-size:clamp(2rem,6vw,4.5rem);line-height:1.05;font-weight:800;}",
+      "prompt": "השתמש בגודל clamp(2rem, 6vw, 4.5rem) לכותרת Hero ראשית. זה גודל רספונסיבי אמיתי שמתאים לנייד ולמחשב. שמור על line-height סביב 1.05, font-weight 800, RTL מלא, וללא גלילה אופקית."
+    },
+    {
+      "id": "size-body-readable",
+      "category": "גדלים",
+      "type": "font-size",
+      "name": "טקסט גוף קריא",
+      "value": "1rem",
+      "px": "16px",
+      "use": ["גודל טקסט", "דף מידע", "טבלה"],
+      "css": "body{font-size:1rem;line-height:1.6;}",
+      "prompt": "השתמש בגודל 1rem / 16px לטקסט גוף רגיל. הוסף line-height סביב 1.6 לקריאות גבוהה בעברית. מתאים לדפי מידע, כרטיסיות, טבלאות וטקסט רגיל."
+    },
+    {
+      "id": "table-clean-rtl",
+      "category": "טבלאות",
+      "type": "table",
+      "name": "טבלת RTL נקייה",
+      "value": "clean-rtl-table",
+      "use": ["טבלה", "דף מידע", "דשבורד", "אתר מתמטיקה"],
+      "css": ".table-clean{width:100%;border-collapse:collapse;direction:rtl}.table-clean th{background:#EFF6FF;color:#1E3A8A}.table-clean th,.table-clean td{padding:.75rem;border-bottom:1px solid #CBD5E1;text-align:right;}",
+      "prompt": "צור טבלת RTL נקייה בסגנון table-clean. הכותרות ברקע #EFF6FF, טקסט כותרת #1E3A8A, גבולות עדינים #CBD5E1, ריווח נוח, התאמה לנייד, וללא דמו או placeholder."
+    },
+    {
+      "id": "button-copy-premium",
+      "category": "כפתורים",
+      "type": "button",
+      "name": "כפתור העתקה פרימיום",
+      "value": "copy-button-premium",
+      "use": ["כפתור העתקה", "אפליקציה לנייד", "כפתור ראשי"],
+      "css": ".copy-button{background:#2563EB;color:#fff;border:0;border-radius:999px;padding:.85rem 1.1rem;font-weight:800;min-height:46px;}",
+      "prompt": "צור כפתור העתקה פרימיום בצבע #2563EB, טקסט לבן, radius מלא, padding נוח, min-height 46px, מתאים ללחיצה בטלפון, עם הודעת הצלחה אחרי העתקה. הכל בעברית RTL וללא דמו."
+    }
+  ]
+}
