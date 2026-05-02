@@ -38,7 +38,7 @@ function buildReport(rows, ok, warn, bad) {
   for (const row of rows) {
     lines.push(`- ${row.status.toUpperCase()} | ${row.name} | ${row.details}`);
   }
-  lines.push('manual still required: צפה, העתק Prompt ל-GPT, הוסף לחבילה, העתק Prompt חבילה, הדבקה בצ׳אט.');
+  lines.push('manual still required: צפה, העתק Prompt ל-GPT, הוסף לחבילה, העתק Prompt חבילה, טיפוגרפיה חכמה, הדבקה בצ׳אט.');
   return lines.join('\n');
 }
 
@@ -88,6 +88,26 @@ async function runAllChecks() {
   }
 
   try {
+    const { response, text } = await fetchText('typography-extension.js');
+    const required = ['font-heebo-premium', 'size-fluid-hero', 'data-copy-font-prompt', 'data-copy-size-prompt', 'data-copy-pair-prompt'];
+    const missing = required.filter((token) => !text.includes(token));
+    if (response.ok && missing.length === 0) record('טיפוגרפיה בסיסית', 'ok', 'גופנים, גדלים ושילובים בסיסיים נטענים.');
+    else record('טיפוגרפיה בסיסית', 'bad', `חסרים: ${missing.join(', ')}`);
+  } catch (error) {
+    record('טיפוגרפיה בסיסית', 'bad', error.message);
+  }
+
+  try {
+    const { response, text } = await fetchText('advanced-typography-extension.js');
+    const required = ['advancedTypography', 'adv-font-heebo', 'adv-size-hero-fluid', 'adv-weight-bold', 'adv-leading-readable', 'adv-system-math-premium', 'data-adv-copy'];
+    const missing = required.filter((token) => !text.includes(token));
+    if (response.ok && missing.length === 0) record('טיפוגרפיה חכמה', 'ok', 'גופנים, גדלים, משקלים, line-height ומערכות טיפוגרפיה נטענים.');
+    else record('טיפוגרפיה חכמה', 'bad', `חסרים: ${missing.join(', ')}`);
+  } catch (error) {
+    record('טיפוגרפיה חכמה', 'bad', error.message);
+  }
+
+  try {
     localStorage.setItem('colors:qa-test', 'ok');
     const value = localStorage.getItem('colors:qa-test');
     if (value === 'ok') record('LocalStorage', 'ok', 'שמירת מועדפים/בחירות אפשרית בדפדפן הזה.');
@@ -105,12 +125,12 @@ async function runAllChecks() {
   }
 
   try {
-    const links = ['index.html', 'site.config.json', 'styles.css', 'script.js'];
+    const links = ['index.html', 'site.config.json', 'styles.css', 'script.js', 'typography-extension.js', 'advanced-typography-extension.js'];
     for (const link of links) {
       const response = await fetch(link, { cache: 'no-store' });
       if (!response.ok) throw new Error(`${link} returned ${response.status}`);
     }
-    record('קבצים חיוניים', 'ok', 'index, config, CSS ו-JS נטענים מהאתר החי.');
+    record('קבצים חיוניים', 'ok', 'index, config, CSS, JS וטיפוגרפיה נטענים מהאתר החי.');
   } catch (error) {
     record('קבצים חיוניים', 'bad', error.message);
   }
