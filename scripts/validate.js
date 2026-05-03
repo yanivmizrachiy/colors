@@ -19,6 +19,7 @@ for (const file of [
   'smart-builder.html',
   'smart-builder.css',
   'smart-builder.js',
+  'zero-demo-guard.js',
   'RULES.md',
   'README.md',
   'qa-mobile.html',
@@ -79,6 +80,7 @@ mustInclude('index.html', html, [
   'smart-builder.html',
   'typography-extension.js',
   'advanced-typography-extension.js',
+  'zero-demo-guard.js',
   '#advancedTypography'
 ]);
 
@@ -102,7 +104,8 @@ mustInclude('smart-builder.html', smartHtml, [
   'selectedList',
   'copySelectedPrompt',
   'clearSelected',
-  'smart-builder.js'
+  'smart-builder.js',
+  'zero-demo-guard.js'
 ]);
 
 const smartJs = fs.readFileSync('smart-builder.js', 'utf8');
@@ -128,13 +131,22 @@ mustInclude('smart-builder.css', smartCss, [
   'toast'
 ]);
 
+const zeroGuard = fs.readFileSync('zero-demo-guard.js', 'utf8');
+mustInclude('zero-demo-guard.js', zeroGuard, [
+  'navigator.clipboard.writeText',
+  'MutationObserver',
+  'תוכן אמיתי בלבד',
+  'תצוגת'
+]);
+
 const typo = fs.readFileSync('typography-extension.js', 'utf8');
 mustInclude('typography-extension.js', typo, [
   'font-heebo-premium',
   'size-fluid-hero',
   'data-copy-font-prompt',
   'data-copy-size-prompt',
-  'data-copy-pair-prompt'
+  'data-copy-pair-prompt',
+  'תצוגת'
 ]);
 
 const advTypo = fs.readFileSync('advanced-typography-extension.js', 'utf8');
@@ -155,7 +167,8 @@ mustInclude('qa-mobile.html', qaHtml, [
   'copyReport',
   'reportBox',
   'site.config.json',
-  'בדיקות ידניות'
+  'בדיקות ידניות',
+  'zero-demo-guard.js'
 ]);
 
 const qaJs = fs.readFileSync('qa-mobile.js', 'utf8');
@@ -192,4 +205,5 @@ console.log('token_categories=' + tokensData.categories.length);
 console.log('token_uses=' + tokensData.uses.length);
 console.log('mobile_qa=present');
 console.log('smart_builder=present');
+console.log('zero_demo_guard=present');
 console.log('typography=advanced');
