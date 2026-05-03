@@ -7,6 +7,7 @@ const REQUIRED_FILES = [
   'zero-demo-guard.js',
   'scripts/validate.js',
   'scripts/doctor.js',
+  'scripts/generate-design-tokens-safe.cjs',
   'site.config.json',
   'design-tokens.json',
   'smart-builder.js',
@@ -48,6 +49,18 @@ for (const token of ['navigator.clipboard.writeText', 'MutationObserver', 'תו�
   if (!guard.includes(token)) fail('zero_demo_guard_missing_' + token);
 }
 
+const safeGenerator = read('scripts/generate-design-tokens-safe.cjs');
+for (const token of ['CONTENT_ONLY_REAL', 'ui_files_overwritten=false', 'תוכן אמיתי בלבד']) {
+  if (!safeGenerator.includes(token)) fail('safe_generator_missing_' + token);
+}
+for (const forbidden of ['smart-builder.html', 'smart-builder.css', 'smart-builder.js', 'placeholder']) {
+  if (forbidden === 'placeholder') {
+    if (safeGenerator.toLowerCase().includes(forbidden)) fail('safe_generator_contains_placeholder');
+  } else if (safeGenerator.includes(`writeFileSync('${forbidden}'`) || safeGenerator.includes(`writeFileSync("${forbidden}"`)) {
+    fail('safe_generator_overwrites_ui_file_' + forbidden);
+  }
+}
+
 const filesToAudit = [
   'index.html',
   'smart-builder.html',
@@ -66,15 +79,7 @@ for (const file of filesToAudit) {
   }
 }
 
-const generatedSources = ['scripts/generate-smart-builder.cjs'];
-for (const file of generatedSources) {
-  if (!fs.existsSync(path.join(ROOT, file))) continue;
-  const text = read(file);
-  if (!text.includes('CONTENT_ONLY_REAL') && text.includes('placeholder')) {
-    fail(file + '_can_regenerate_placeholder_wording');
-  }
-}
-
 console.log('ZERO_DEMO_AUDIT_OK');
 console.log('guarded_pages=' + REQUIRED_GUARD_PAGES.length);
 console.log('audited_files=' + filesToAudit.length);
+console.log('safe_generator=present');
