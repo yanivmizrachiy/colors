@@ -1,23 +1,54 @@
 <!doctype html>
 <html lang="he" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Smart Builder — colors</title>
-<link rel="stylesheet" href="smart-builder.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Smart Builder — colors</title>
+  <meta name="theme-color" content="#1E3A8A">
+  <link rel="stylesheet" href="smart-builder.css">
 </head>
 <body>
-<header class="sb-header">
-  <div><h1>Smart Builder</h1><p>בחר עיצוב → העתק Prompt → GPT בונה</p></div>
-  <nav><a href="index.html">colors</a><a href="qa-mobile.html">בדיקה</a></nav>
-</header>
-<main>
-<section class="hero"><h2>Design Prompt Builder אמיתי</h2><p>צבעים, גופנים, גדלים, טבלאות, כפתורים, מסגרות ומערכות עיצוב — עם העתקה מהירה ל-GPT.</p></section>
-<section class="controls"><input id="q" placeholder="חיפוש: רקע, גופן, כפתור, טבלה, מתמטיקה..."><div id="cats"></div><div id="uses"></div></section>
-<section id="stats" class="stats"></section>
-<section id="grid" class="grid"></section>
-</main>
-<div id="toast" class="toast"></div>
-<script src="smart-builder.js"></script>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="חזרה ל-colors">
+      <span class="brand-mark">C</span>
+      <span><b>colors</b><small>Smart Builder</small></span>
+    </a>
+    <nav>
+      <a href="index.html">ספרייה</a>
+      <a href="qa-mobile.html">בדיקה</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="eyebrow">בחר לפי שימוש → העתק ל־GPT</p>
+      <h1>בונה פרומפטים חכם לעיצוב אתרים</h1>
+      <p>בחר צבע, גופן, גודל, טבלה, כפתור, מסגרת או מערכת עיצוב לפי שימוש אמיתי — רקע, כותרת, כפתור העתקה, טבלה, אתר מתמטיקה, אתר פרימיום, מובייל ועוד.</p>
+      <div class="hero-actions">
+        <button id="copySelectedPrompt" class="primary" type="button">העתק Prompt מכל הבחירות</button>
+        <button id="clearSelected" type="button">נקה בחירות</button>
+      </div>
+    </section>
+
+    <section class="controls" aria-label="חיפוש וסינון">
+      <input id="searchInput" type="search" placeholder="חפש: רקע, Heebo, Hero, טבלה, כחול, גופן, מתמטיקה...">
+      <div id="categoryChips" class="chips"></div>
+      <div id="useChips" class="chips compact"></div>
+    </section>
+
+    <section class="selected-panel">
+      <div>
+        <h2>הבחירות שלי</h2>
+        <p>בחר כמה רכיבים והעתק Prompt אחד חכם ל־GPT.</p>
+      </div>
+      <div id="selectedList" class="selected-list">עדיין לא נבחרו רכיבים.</div>
+    </section>
+
+    <section id="stats" class="stats"></section>
+    <section id="grid" class="grid" aria-live="polite"></section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="smart-builder.js"></script>
 </body>
 </html>
