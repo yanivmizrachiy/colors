@@ -59,7 +59,7 @@ for (const token of tokensData.tokens) {
   tokenIds.add(token.id);
   if (!token.category || !token.type || !token.name) throw new Error('missing token metadata ' + token.id);
   if (!Array.isArray(token.use) || token.use.length < 1) throw new Error('missing token use list ' + token.id);
-  if (!token.copy || !token.copy.prompt || !token.copy.css === undefined || !token.copy.value === undefined) {
+  if (!token.copy || !token.copy.prompt || token.copy.css === undefined || token.copy.value === undefined || !token.copy.id) {
     throw new Error('missing token copy payload ' + token.id);
   }
   const prompt = token.copy.prompt || token.prompt || '';
