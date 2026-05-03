@@ -38,7 +38,7 @@ function buildReport(rows, ok, warn, bad) {
   for (const row of rows) {
     lines.push(`- ${row.status.toUpperCase()} | ${row.name} | ${row.details}`);
   }
-  lines.push('manual still required: צפה, העתק Prompt ל-GPT, הוסף לחבילה, העתק Prompt חבילה, טיפוגרפיה חכמה, הדבקה בצ׳אט.');
+  lines.push('manual still required: צפה, העתק Prompt ל-GPT, הוסף לחבילה, העתק Prompt חבילה, Smart Builder, טיפוגרפיה חכמה, הדבקה בצ׳אט.');
   return lines.join('\n');
 }
 
@@ -78,6 +78,18 @@ async function runAllChecks() {
   }
 
   try {
+    const { response, text } = await fetchText('design-tokens.json');
+    const tokens = JSON.parse(text);
+    const count = Array.isArray(tokens.tokens) ? tokens.tokens.length : 0;
+    const categories = Array.isArray(tokens.categories) ? tokens.categories.length : 0;
+    const uses = Array.isArray(tokens.uses) ? tokens.uses.length : 0;
+    if (response.ok && count >= 100 && categories >= 5 && uses >= 20) record('Design Tokens', 'ok', `design-tokens.json נטען. tokens=${count}, categories=${categories}, uses=${uses}`);
+    else record('Design Tokens', 'bad', `מבנה tokens לא מספיק חזק. tokens=${count}, categories=${categories}, uses=${uses}`);
+  } catch (error) {
+    record('Design Tokens', 'bad', error.message);
+  }
+
+  try {
     const { response, text } = await fetchText('script.js');
     const required = ['navigator.clipboard', 'openModal', 'data-copy', 'data-view', 'bundlePrompt'];
     const missing = required.filter((token) => !text.includes(token));
@@ -85,6 +97,36 @@ async function runAllChecks() {
     else record('קוד האפליקציה', 'bad', `חסרים: ${missing.join(', ')}`);
   } catch (error) {
     record('קוד האפליקציה', 'bad', error.message);
+  }
+
+  try {
+    const { response, text } = await fetchText('smart-builder.html');
+    const required = ['searchInput', 'categoryChips', 'useChips', 'selectedList', 'copySelectedPrompt', 'smart-builder.js'];
+    const missing = required.filter((token) => !text.includes(token));
+    if (response.ok && missing.length === 0) record('Smart Builder HTML', 'ok', 'מבנה Smart Builder כולל חיפוש, סינון, בחירות והעתקת Prompt משולב.');
+    else record('Smart Builder HTML', 'bad', `חסרים: ${missing.join(', ')}`);
+  } catch (error) {
+    record('Smart Builder HTML', 'bad', error.message);
+  }
+
+  try {
+    const { response, text } = await fetchText('smart-builder.js');
+    const required = ['design-tokens.json', 'buildSelectedPrompt', 'copySelectedPrompt', 'categoryChips', 'useChips', 'selectedList', 'data-select'];
+    const missing = required.filter((token) => !text.includes(token));
+    if (response.ok && missing.length === 0) record('Smart Builder JS', 'ok', 'Smart Builder JS כולל tokens, בחירה, סינון והעתקת Prompt מכל הבחירות.');
+    else record('Smart Builder JS', 'bad', `חסרים: ${missing.join(', ')}`);
+  } catch (error) {
+    record('Smart Builder JS', 'bad', error.message);
+  }
+
+  try {
+    const { response, text } = await fetchText('smart-builder.css');
+    const required = ['topbar', 'selected-panel', 'selected-pill', 'grid', '@media'];
+    const missing = required.filter((token) => !text.includes(token));
+    if (response.ok && missing.length === 0) record('Smart Builder CSS', 'ok', 'Smart Builder CSS כולל עיצוב לנייד, אזור בחירות וכרטיסים.');
+    else record('Smart Builder CSS', 'bad', `חסרים: ${missing.join(', ')}`);
+  } catch (error) {
+    record('Smart Builder CSS', 'bad', error.message);
   }
 
   try {
@@ -125,12 +167,12 @@ async function runAllChecks() {
   }
 
   try {
-    const links = ['index.html', 'site.config.json', 'styles.css', 'script.js', 'typography-extension.js', 'advanced-typography-extension.js'];
+    const links = ['index.html', 'site.config.json', 'design-tokens.json', 'styles.css', 'script.js', 'smart-builder.html', 'smart-builder.css', 'smart-builder.js', 'typography-extension.js', 'advanced-typography-extension.js'];
     for (const link of links) {
       const response = await fetch(link, { cache: 'no-store' });
       if (!response.ok) throw new Error(`${link} returned ${response.status}`);
     }
-    record('קבצים חיוניים', 'ok', 'index, config, CSS, JS וטיפוגרפיה נטענים מהאתר החי.');
+    record('קבצים חיוניים', 'ok', 'כל קבצי האתר, Smart Builder, tokens וטיפוגרפיה נטענים מהאתר החי.');
   } catch (error) {
     record('קבצים חיוניים', 'bad', error.message);
   }
