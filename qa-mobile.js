@@ -101,9 +101,9 @@ async function runAllChecks() {
 
   try {
     const { response, text } = await fetchText('smart-builder.html');
-    const required = ['searchInput', 'categoryChips', 'useChips', 'selectedList', 'copySelectedPrompt', 'smart-builder.js'];
+    const required = ['searchInput', 'categoryChips', 'useChips', 'selectedList', 'copySelectedPrompt', 'smart-builder.js', 'zero-demo-guard.js'];
     const missing = required.filter((token) => !text.includes(token));
-    if (response.ok && missing.length === 0) record('Smart Builder HTML', 'ok', 'מבנה Smart Builder כולל חיפוש, סינון, בחירות והעתקת Prompt משולב.');
+    if (response.ok && missing.length === 0) record('Smart Builder HTML', 'ok', 'מבנה Smart Builder כולל חיפוש, סינון, בחירות, העתקת Prompt משולב ו־0 דמו.');
     else record('Smart Builder HTML', 'bad', `חסרים: ${missing.join(', ')}`);
   } catch (error) {
     record('Smart Builder HTML', 'bad', error.message);
@@ -131,9 +131,9 @@ async function runAllChecks() {
 
   try {
     const { response, text } = await fetchText('typography-extension.js');
-    const required = ['font-heebo-premium', 'size-fluid-hero', 'data-copy-font-prompt', 'data-copy-size-prompt', 'data-copy-pair-prompt'];
+    const required = ['font-heebo-premium', 'size-fluid-hero', 'data-copy-font-prompt', 'data-copy-size-prompt', 'data-copy-pair-prompt', 'תצוגת'];
     const missing = required.filter((token) => !text.includes(token));
-    if (response.ok && missing.length === 0) record('טיפוגרפיה בסיסית', 'ok', 'גופנים, גדלים ושילובים בסיסיים נטענים.');
+    if (response.ok && missing.length === 0) record('טיפוגרפיה בסיסית', 'ok', 'גופנים, גדלים ושילובים בסיסיים נטענים עם ניסוח תצוגה נקי.');
     else record('טיפוגרפיה בסיסית', 'bad', `חסרים: ${missing.join(', ')}`);
   } catch (error) {
     record('טיפוגרפיה בסיסית', 'bad', error.message);
@@ -147,6 +147,16 @@ async function runAllChecks() {
     else record('טיפוגרפיה חכמה', 'bad', `חסרים: ${missing.join(', ')}`);
   } catch (error) {
     record('טיפוגרפיה חכמה', 'bad', error.message);
+  }
+
+  try {
+    const { response, text } = await fetchText('zero-demo-guard.js');
+    const required = ['navigator.clipboard.writeText', 'MutationObserver', 'תוכן אמיתי בלבד', 'תצוגת'];
+    const missing = required.filter((token) => !text.includes(token));
+    if (response.ok && missing.length === 0) record('Zero Demo Guard', 'ok', 'zero-demo-guard.js נטען ומגן על טקסט מוצג ועל Clipboard.');
+    else record('Zero Demo Guard', 'bad', `חסרים: ${missing.join(', ')}`);
+  } catch (error) {
+    record('Zero Demo Guard', 'bad', error.message);
   }
 
   try {
@@ -167,12 +177,12 @@ async function runAllChecks() {
   }
 
   try {
-    const links = ['index.html', 'site.config.json', 'design-tokens.json', 'styles.css', 'script.js', 'smart-builder.html', 'smart-builder.css', 'smart-builder.js', 'typography-extension.js', 'advanced-typography-extension.js'];
+    const links = ['index.html', 'site.config.json', 'design-tokens.json', 'styles.css', 'script.js', 'smart-builder.html', 'smart-builder.css', 'smart-builder.js', 'typography-extension.js', 'advanced-typography-extension.js', 'zero-demo-guard.js'];
     for (const link of links) {
       const response = await fetch(link, { cache: 'no-store' });
       if (!response.ok) throw new Error(`${link} returned ${response.status}`);
     }
-    record('קבצים חיוניים', 'ok', 'כל קבצי האתר, Smart Builder, tokens וטיפוגרפיה נטענים מהאתר החי.');
+    record('קבצים חיוניים', 'ok', 'כל קבצי האתר, Smart Builder, tokens, טיפוגרפיה ו־0 דמו נטענים מהאתר החי.');
   } catch (error) {
     record('קבצים חיוניים', 'bad', error.message);
   }
