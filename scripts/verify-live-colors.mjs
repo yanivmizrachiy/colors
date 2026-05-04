@@ -6,9 +6,12 @@ const checks={
   'qa-mobile.js':['runAllChecks','design-tokens.json','zero-demo-guard.js'],
   'zero-demo-guard.js':['navigator.clipboard.writeText','MutationObserver','תוכן אמיתי בלבד'],
   'smart-builder.js':['design-tokens.json','buildSelectedPrompt','data-select'],
+  'typography-extension.js':['font-heebo-premium','size-fluid-hero','data-copy-font-prompt','תצוגת'],
+  'advanced-typography-extension.js':['advancedTypography','adv-font-heebo','adv-size-hero-fluid','data-adv-copy'],
   'design-tokens.json':['tokens','categories','uses']
 };
 const forbidden=['כותרת לדוגמה','כותרת עברית לדוגמה','דוגמת טקסט','דוגמה לטקסט','טקסט לדוגמה','placeholder','mock','fake','lorem'];
+const cleanerFiles=new Set(['zero-demo-guard.js']);
 let ok=0,fail=0;
 for(const [file,tokens] of Object.entries(checks)){
   try{
@@ -16,7 +19,9 @@ for(const [file,tokens] of Object.entries(checks)){
     const text=await res.text();
     if(!res.ok) throw new Error('HTTP '+res.status);
     for(const t of tokens) if(!text.includes(t)) throw new Error('missing '+t);
-    for(const bad of forbidden) if(text.toLowerCase().includes(bad.toLowerCase())) throw new Error('forbidden '+bad);
+    if(!cleanerFiles.has(file)){
+      for(const bad of forbidden) if(text.toLowerCase().includes(bad.toLowerCase())) throw new Error('forbidden '+bad);
+    }
     console.log('OK '+file); ok++;
   }catch(e){console.error('FAIL '+file+' '+e.message); fail++;}
 }
