@@ -10,6 +10,10 @@ function mustInclude(label, text, tokens) {
   }
 }
 
+function promptHasTruthRule(text) {
+  return text.includes('תוכן אמיתי בלבד') || text.includes('לא דמו');
+}
+
 for (const file of [
   'index.html',
   'styles.css',
@@ -41,9 +45,10 @@ for (const c of cfg.components) {
   if (!c.name || !c.type || !c.category) throw new Error('missing component metadata ' + c.id);
   if (!c.copy || !c.copy.prompt || !c.copy.link) throw new Error('missing component copy ' + c.id);
   const p = c.copy.prompt;
-  for (const word of ['RTL', 'נייד', 'לא דמו', 'HTML', 'CSS', 'JavaScript']) {
+  for (const word of ['RTL', 'נייד', 'HTML', 'CSS', 'JavaScript']) {
     if (!p.includes(word)) throw new Error('weak component prompt ' + c.id + ' missing ' + word);
   }
+  if (!promptHasTruthRule(p)) throw new Error('weak component prompt ' + c.id + ' missing truth rule');
   if (p.length < 230) throw new Error('component prompt too short ' + c.id);
   if (c.hex && !/^#[0-9A-Fa-f]{6}$/.test(c.hex)) throw new Error('bad component hex ' + c.id);
   if (c.hsl && !/^hsl\(\d+ \d+% \d+%\)$/.test(c.hsl)) throw new Error('bad component hsl ' + c.id);
@@ -64,9 +69,10 @@ for (const token of tokensData.tokens) {
     throw new Error('missing token copy payload ' + token.id);
   }
   const prompt = token.copy.prompt || token.prompt || '';
-  for (const word of ['RTL', 'נייד', 'לא דמו']) {
+  for (const word of ['RTL', 'נייד']) {
     if (!prompt.includes(word)) throw new Error('weak token prompt ' + token.id + ' missing ' + word);
   }
+  if (!promptHasTruthRule(prompt)) throw new Error('weak token prompt ' + token.id + ' missing truth rule');
   if (token.type === 'color' && token.value && !/^#[0-9A-Fa-f]{6}$/.test(token.value)) {
     throw new Error('bad token color value ' + token.id);
   }
@@ -206,4 +212,5 @@ console.log('token_uses=' + tokensData.uses.length);
 console.log('mobile_qa=present');
 console.log('smart_builder=present');
 console.log('zero_demo_guard=present');
+console.log('truth_rule=content_only_real_or_legacy_no_demo');
 console.log('typography=advanced');
