@@ -1,282 +1,51 @@
-const fs = require("fs");
-
-function fail(msg) {
-  console.error("COLORS_DOCTOR_FAIL=" + msg);
-  process.exit(1);
+const fs=require('fs');
+function fail(x){console.error('COLORS_DOCTOR_FAIL='+x);process.exit(1)}
+function read(f){return fs.readFileSync(f,'utf8')}
+function file(f){if(!fs.existsSync(f))fail('missing_'+f)}
+function inc(label,text,tokens){for(const t of tokens)if(!text.includes(t))fail(label+'_missing_'+t)}
+function truth(s){return s.includes('תוכן אמיתי בלבד')||s.includes('לא דמו')}
+const files=['index.html','styles.css','script.js','site.config.json','design-tokens.json','smart-builder.html','smart-builder.css','smart-builder.js','zero-demo-guard.js','qa-mobile.html','qa-mobile.css','qa-mobile.js','typography-extension.js','advanced-typography-extension.js','scripts/generate-design-tokens-safe.cjs','scripts/audit-zero-demo.js','RULES.md','README.md','manifest.webmanifest','sw.js','.nojekyll','.github/workflows/validate.yml','.github/workflows/pages.yml'];
+files.forEach(file);
+const cfg=JSON.parse(read('site.config.json'));
+if(!cfg.project||cfg.project.name!=='colors')fail('bad_project_name');
+if(!Array.isArray(cfg.components)||cfg.components.length<100)fail('too_few_components');
+const ids=new Set(),cats=new Set();let strong=0,copies=0,colors=0,viewable=0;
+for(const c of cfg.components){
+ if(!c.id||ids.has(c.id))fail('duplicate_or_missing_id_'+c.id);ids.add(c.id);cats.add(c.category);
+ if(!c.name||!c.type||!c.category)fail('missing_metadata_'+c.id);
+ if(!c.copy||!c.copy.prompt||c.copy.css===undefined||!c.copy.link||!c.copy.styleId)fail('missing_copy_payload_'+c.id);copies++;
+ const p=c.copy.prompt;for(const m of ['RTL','נייד','HTML','CSS','JavaScript'])if(!p.includes(m))fail('weak_prompt_'+c.id+'_missing_'+m);
+ if(!truth(p))fail('weak_prompt_'+c.id+'_missing_truth_rule');if(p.length<230)fail('prompt_too_short_'+c.id);strong++;
+ if(c.hex){if(!/^#[0-9A-Fa-f]{6}$/.test(c.hex))fail('bad_hex_'+c.id);if(!/^hsl\(\d+ \d+% \d+%\)$/.test(c.hsl||''))fail('bad_hsl_'+c.id);colors++}
 }
-
-function read(file) {
-  return fs.readFileSync(file, "utf8");
+const tok=JSON.parse(read('design-tokens.json'));
+if(!Array.isArray(tok.tokens)||tok.tokens.length<100)fail('too_few_design_tokens');
+if(!Array.isArray(tok.categories)||tok.categories.length<5)fail('too_few_token_categories');
+if(!Array.isArray(tok.uses)||tok.uses.length<20)fail('too_few_token_uses');
+const tids=new Set();let tokenCopies=0,tokenPrompts=0,tokenColors=0;
+for(const t of tok.tokens){
+ if(!t.id||tids.has(t.id))fail('duplicate_or_missing_token_id_'+t.id);tids.add(t.id);
+ if(!t.name||!t.type||!t.category)fail('missing_token_metadata_'+t.id);
+ if(!Array.isArray(t.use)||!t.use.length)fail('missing_token_use_'+t.id);
+ if(!t.copy||!t.copy.prompt||t.copy.css===undefined||t.copy.value===undefined||!t.copy.id)fail('missing_token_copy_payload_'+t.id);tokenCopies++;
+ const p=t.copy.prompt||t.prompt||'';for(const m of ['RTL','נייד'])if(!p.includes(m))fail('weak_token_prompt_'+t.id+'_missing_'+m);
+ if(!truth(p))fail('weak_token_prompt_'+t.id+'_missing_truth_rule');tokenPrompts++;
+ if(t.type==='color'){if(!/^#[0-9A-Fa-f]{6}$/.test(t.value||''))fail('bad_token_color_'+t.id);tokenColors++}
 }
-
-function mustFile(file) {
-  if (!fs.existsSync(file)) fail("missing_" + file);
-}
-
-function mustInclude(label, text, tokens) {
-  for (const token of tokens) {
-    if (!text.includes(token)) fail(label + "_missing_" + token);
-  }
-}
-
-function hasTruthRule(text) {
-  return text.includes("תוכן אמיתי בלבד") || text.includes("לא דמו");
-}
-
-const required = [
-  "index.html",
-  "styles.css",
-  "script.js",
-  "site.config.json",
-  "design-tokens.json",
-  "smart-builder.html",
-  "smart-builder.css",
-  "smart-builder.js",
-  "zero-demo-guard.js",
-  "qa-mobile.html",
-  "qa-mobile.css",
-  "qa-mobile.js",
-  "typography-extension.js",
-  "advanced-typography-extension.js",
-  "scripts/generate-design-tokens-safe.cjs",
-  "scripts/audit-zero-demo.js",
-  "RULES.md",
-  "README.md",
-  "manifest.webmanifest",
-  "sw.js",
-  ".nojekyll",
-  ".github/workflows/validate.yml",
-  ".github/workflows/pages.yml"
-];
-
-for (const file of required) mustFile(file);
-
-const cfg = JSON.parse(read("site.config.json"));
-if (!cfg.project || cfg.project.name !== "colors") fail("bad_project_name");
-if (!Array.isArray(cfg.components) || cfg.components.length < 100) fail("too_few_components");
-
-const ids = new Set();
-const categories = new Set();
-let strongPrompts = 0;
-let copyPayloads = 0;
-let realColors = 0;
-let viewable = 0;
-
-for (const c of cfg.components) {
-  if (!c.id || ids.has(c.id)) fail("duplicate_or_missing_id_" + c.id);
-  ids.add(c.id);
-  categories.add(c.category);
-
-  if (!c.name || !c.type || !c.category) fail("missing_metadata_" + c.id);
-  if (!c.copy || !c.copy.prompt || c.copy.css === undefined || !c.copy.link || !c.copy.styleId) {
-    fail("missing_copy_payload_" + c.id);
-  }
-  copyPayloads++;
-
-  const p = c.copy.prompt;
-  for (const must of ["RTL", "נייד", "HTML", "CSS", "JavaScript"]) {
-    if (!p.includes(must)) fail("weak_prompt_" + c.id + "_missing_" + must);
-  }
-  if (!hasTruthRule(p)) fail("weak_prompt_" + c.id + "_missing_truth_rule");
-  if (p.length < 230) fail("prompt_too_short_" + c.id);
-  strongPrompts++;
-
-  if (c.hex) {
-    if (!/^#[0-9A-Fa-f]{6}$/.test(c.hex)) fail("bad_hex_" + c.id);
-    if (!/^hsl\(\d+ \d+% \d+%\)$/.test(c.hsl || "")) fail("bad_hsl_" + c.id);
-    realColors++;
-  }
-}
-
-const tokensData = JSON.parse(read("design-tokens.json"));
-if (!Array.isArray(tokensData.tokens) || tokensData.tokens.length < 100) fail("too_few_design_tokens");
-if (!Array.isArray(tokensData.categories) || tokensData.categories.length < 5) fail("too_few_token_categories");
-if (!Array.isArray(tokensData.uses) || tokensData.uses.length < 20) fail("too_few_token_uses");
-
-const tokenIds = new Set();
-let tokenCopyPayloads = 0;
-let tokenPrompts = 0;
-let tokenColors = 0;
-
-for (const token of tokensData.tokens) {
-  if (!token.id || tokenIds.has(token.id)) fail("duplicate_or_missing_token_id_" + token.id);
-  tokenIds.add(token.id);
-  if (!token.name || !token.type || !token.category) fail("missing_token_metadata_" + token.id);
-  if (!Array.isArray(token.use) || token.use.length < 1) fail("missing_token_use_" + token.id);
-  if (!token.copy || !token.copy.prompt || token.copy.css === undefined || token.copy.value === undefined || !token.copy.id) {
-    fail("missing_token_copy_payload_" + token.id);
-  }
-  tokenCopyPayloads++;
-
-  const prompt = token.copy.prompt || token.prompt || "";
-  for (const must of ["RTL", "נייד"]) {
-    if (!prompt.includes(must)) fail("weak_token_prompt_" + token.id + "_missing_" + must);
-  }
-  if (!hasTruthRule(prompt)) fail("weak_token_prompt_" + token.id + "_missing_truth_rule");
-  tokenPrompts++;
-
-  if (token.type === "color") {
-    if (!/^#[0-9A-Fa-f]{6}$/.test(token.value || "")) fail("bad_token_color_" + token.id);
-    tokenColors++;
-  }
-}
-
-const html = read("index.html");
-const js = read("script.js");
-const css = read("styles.css");
-const smartHtml = read("smart-builder.html");
-const smartJs = read("smart-builder.js");
-const smartCss = read("smart-builder.css");
-const qaHtml = read("qa-mobile.html");
-const qaJs = read("qa-mobile.js");
-const qaCss = read("qa-mobile.css");
-const typography = read("typography-extension.js");
-const advancedTypography = read("advanced-typography-extension.js");
-const zeroGuard = read("zero-demo-guard.js");
-const safeGenerator = read("scripts/generate-design-tokens-safe.cjs");
-const zeroAudit = read("scripts/audit-zero-demo.js");
-
-mustInclude("index_html", html, [
-  "viewModal",
-  "promptPreview",
-  "componentGrid",
-  "bottom-nav",
-  "styleCart",
-  "qa-mobile.html",
-  "smart-builder.html",
-  "typography-extension.js",
-  "advanced-typography-extension.js",
-  "zero-demo-guard.js"
-]);
-
-mustInclude("script_js", js, [
-  "navigator.clipboard",
-  "openModal",
-  "data-copy",
-  "data-view",
-  "localStorage",
-  "bundlePrompt",
-  "data-select"
-]);
-if (js.includes("data-view")) viewable = cfg.components.length;
-
-mustInclude("styles_css", css, ["@media", "bottom-nav", "component-grid", "modal-card"]);
-
-mustInclude("smart_builder_html", smartHtml, [
-  "searchInput",
-  "categoryChips",
-  "useChips",
-  "selectedList",
-  "copySelectedPrompt",
-  "clearSelected",
-  "smart-builder.js",
-  "zero-demo-guard.js"
-]);
-
-mustInclude("smart_builder_js", smartJs, [
-  "design-tokens.json",
-  "buildSelectedPrompt",
-  "copySelectedPrompt",
-  "categoryChips",
-  "useChips",
-  "selectedList",
-  "data-select",
-  "data-copy"
-]);
-
-mustInclude("smart_builder_css", smartCss, [
-  "@media",
-  "topbar",
-  "selected-panel",
-  "selected-pill",
-  "grid",
-  "actions",
-  "toast"
-]);
-
-mustInclude("qa_mobile_html", qaHtml, [
-  "runAll",
-  "copyTest",
-  "copyReport",
-  "reportBox",
-  "site.config.json",
-  "בדיקות ידניות",
-  "zero-demo-guard.js"
-]);
-
-mustInclude("qa_mobile_js", qaJs, [
-  "runAllChecks",
-  "navigator.clipboard",
-  "localStorage",
-  "site.config.json",
-  "design-tokens.json",
-  "smart-builder.html",
-  "smart-builder.js",
-  "smart-builder.css",
-  "typography-extension.js",
-  "advanced-typography-extension.js",
-  "zero-demo-guard.js",
-  "scrollWidth",
-  "copyReport",
-  "buildReport"
-]);
-
-mustInclude("qa_mobile_css", qaCss, ["@media", "qa-shell", "btn primary", "checklist", "toast"]);
-
-mustInclude("typography_extension", typography, [
-  "font-heebo-premium",
-  "size-fluid-hero",
-  "data-copy-font-prompt",
-  "data-copy-size-prompt",
-  "data-copy-pair-prompt",
-  "תצוגת"
-]);
-
-mustInclude("advanced_typography_extension", advancedTypography, [
-  "advancedTypography",
-  "adv-font-heebo",
-  "adv-size-hero-fluid",
-  "adv-weight-bold",
-  "adv-leading-readable",
-  "adv-system-math-premium",
-  "data-adv-copy"
-]);
-
-mustInclude("zero_demo_guard", zeroGuard, [
-  "navigator.clipboard.writeText",
-  "MutationObserver",
-  "תוכן אמיתי בלבד",
-  "תצוגת"
-]);
-
-mustInclude("safe_generator", safeGenerator, [
-  "CONTENT_ONLY_REAL",
-  "ui_files_overwritten=false",
-  "תוכן אמיתי בלבד"
-]);
-
-mustInclude("zero_demo_audit", zeroAudit, [
-  "ZERO_DEMO_AUDIT_OK",
-  "scripts/generate-design-tokens-safe.cjs",
-  "safe_generator=present"
-]);
-
-console.log("COLORS_DOCTOR_OK");
-console.log("components=" + cfg.components.length);
-console.log("categories=" + categories.size);
-console.log("copy_payloads=" + copyPayloads);
-console.log("strong_prompts=" + strongPrompts);
-console.log("real_colors=" + realColors);
-console.log("dynamic_view_buttons=" + viewable);
-console.log("design_tokens=" + tokensData.tokens.length);
-console.log("token_categories=" + tokensData.categories.length);
-console.log("token_uses=" + tokensData.uses.length);
-console.log("token_copy_payloads=" + tokenCopyPayloads);
-console.log("token_prompts=" + tokenPrompts);
-console.log("token_colors=" + tokenColors);
-console.log("smart_builder=present");
-console.log("mobile_qa=present");
-console.log("zero_demo_guard=present");
-console.log("safe_generator=present");
-console.log("truth_rule=content_only_real_or_legacy_no_demo");
-console.log("typography=advanced");
+const html=read('index.html'),js=read('script.js'),css=read('styles.css'),sh=read('smart-builder.html'),sj=read('smart-builder.js'),sc=read('smart-builder.css'),qh=read('qa-mobile.html'),qj=read('qa-mobile.js'),qc=read('qa-mobile.css'),ty=read('typography-extension.js'),aty=read('advanced-typography-extension.js'),zg=read('zero-demo-guard.js'),sg=read('scripts/generate-design-tokens-safe.cjs'),za=read('scripts/audit-zero-demo.js');
+inc('index_html',html,['viewModal','promptPreview','componentGrid','bottom-nav','styleCart','qa-mobile.html','smart-builder.html','typography-extension.js','advanced-typography-extension.js','zero-demo-guard.js']);
+inc('script_js',js,['navigator.clipboard','openModal','data-copy','data-view','localStorage','bundlePrompt','data-select']);if(js.includes('data-view'))viewable=cfg.components.length;
+inc('styles_css',css,['@media','bottom-nav','component-grid','modal-card']);
+inc('smart_builder_html',sh,['searchInput','categoryChips','useChips','selectedList','copySelectedPrompt','clearSelected','smart-builder.js','zero-demo-guard.js']);
+inc('smart_builder_js',sj,['design-tokens.json','buildSelectedPrompt','copySelectedPrompt','categoryChips','useChips','selectedList','data-select','data-copy']);
+inc('smart_builder_css',sc,['@media','topbar','selected-panel','selected-pill','grid','actions','toast']);
+inc('qa_mobile_html',qh,['runAll','copyTest','copyReport','reportBox','site.config.json','בדיקות ידניות','zero-demo-guard.js']);
+inc('qa_mobile_js',qj,['runAllChecks','navigator.clipboard','localStorage','site.config.json','design-tokens.json','smart-builder.html','smart-builder.js','smart-builder.css','typography-extension.js','advanced-typography-extension.js','zero-demo-guard.js','scrollWidth','copyReport','buildReport']);
+inc('qa_mobile_css',qc,['@media','qa-shell','.btn.primary','checklist','toast']);
+inc('typography_extension',ty,['font-heebo-premium','size-fluid-hero','data-copy-font-prompt','data-copy-size-prompt','data-copy-pair-prompt','תצוגת']);
+inc('advanced_typography_extension',aty,['advancedTypography','adv-font-heebo','adv-size-hero-fluid','adv-weight-bold','adv-leading-readable','adv-system-math-premium','data-adv-copy']);
+inc('zero_demo_guard',zg,['navigator.clipboard.writeText','MutationObserver','תוכן אמיתי בלבד','תצוגת']);
+inc('safe_generator',sg,['CONTENT_ONLY_REAL','ui_files_overwritten=false','תוכן אמיתי בלבד']);
+inc('zero_demo_audit',za,['ZERO_DEMO_AUDIT_OK','scripts/generate-design-tokens-safe.cjs','safe_generator=present']);
+console.log('COLORS_DOCTOR_OK');
+console.log('components='+cfg.components.length);console.log('categories='+cats.size);console.log('copy_payloads='+copies);console.log('strong_prompts='+strong);console.log('real_colors='+colors);console.log('dynamic_view_buttons='+viewable);console.log('design_tokens='+tok.tokens.length);console.log('token_categories='+tok.categories.length);console.log('token_uses='+tok.uses.length);console.log('token_copy_payloads='+tokenCopies);console.log('token_prompts='+tokenPrompts);console.log('token_colors='+tokenColors);console.log('smart_builder=present');console.log('mobile_qa=present');console.log('zero_demo_guard=present');console.log('safe_generator=present');console.log('truth_rule=content_only_real_or_legacy_no_demo');console.log('typography=advanced');
