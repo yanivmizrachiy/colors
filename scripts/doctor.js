@@ -19,6 +19,10 @@ function mustInclude(label, text, tokens) {
   }
 }
 
+function hasTruthRule(text) {
+  return text.includes("תוכן אמיתי בלבד") || text.includes("לא דמו");
+}
+
 const required = [
   "index.html",
   "styles.css",
@@ -28,11 +32,14 @@ const required = [
   "smart-builder.html",
   "smart-builder.css",
   "smart-builder.js",
+  "zero-demo-guard.js",
   "qa-mobile.html",
   "qa-mobile.css",
   "qa-mobile.js",
   "typography-extension.js",
   "advanced-typography-extension.js",
+  "scripts/generate-design-tokens-safe.cjs",
+  "scripts/audit-zero-demo.js",
   "RULES.md",
   "README.md",
   "manifest.webmanifest",
@@ -67,9 +74,10 @@ for (const c of cfg.components) {
   copyPayloads++;
 
   const p = c.copy.prompt;
-  for (const must of ["RTL", "נייד", "לא דמו", "HTML", "CSS", "JavaScript"]) {
+  for (const must of ["RTL", "נייד", "HTML", "CSS", "JavaScript"]) {
     if (!p.includes(must)) fail("weak_prompt_" + c.id + "_missing_" + must);
   }
+  if (!hasTruthRule(p)) fail("weak_prompt_" + c.id + "_missing_truth_rule");
   if (p.length < 230) fail("prompt_too_short_" + c.id);
   strongPrompts++;
 
@@ -101,9 +109,10 @@ for (const token of tokensData.tokens) {
   tokenCopyPayloads++;
 
   const prompt = token.copy.prompt || token.prompt || "";
-  for (const must of ["RTL", "נייד", "לא דמו"]) {
+  for (const must of ["RTL", "נייד"]) {
     if (!prompt.includes(must)) fail("weak_token_prompt_" + token.id + "_missing_" + must);
   }
+  if (!hasTruthRule(prompt)) fail("weak_token_prompt_" + token.id + "_missing_truth_rule");
   tokenPrompts++;
 
   if (token.type === "color") {
@@ -123,6 +132,9 @@ const qaJs = read("qa-mobile.js");
 const qaCss = read("qa-mobile.css");
 const typography = read("typography-extension.js");
 const advancedTypography = read("advanced-typography-extension.js");
+const zeroGuard = read("zero-demo-guard.js");
+const safeGenerator = read("scripts/generate-design-tokens-safe.cjs");
+const zeroAudit = read("scripts/audit-zero-demo.js");
 
 mustInclude("index_html", html, [
   "viewModal",
@@ -133,7 +145,8 @@ mustInclude("index_html", html, [
   "qa-mobile.html",
   "smart-builder.html",
   "typography-extension.js",
-  "advanced-typography-extension.js"
+  "advanced-typography-extension.js",
+  "zero-demo-guard.js"
 ]);
 
 mustInclude("script_js", js, [
@@ -156,7 +169,8 @@ mustInclude("smart_builder_html", smartHtml, [
   "selectedList",
   "copySelectedPrompt",
   "clearSelected",
-  "smart-builder.js"
+  "smart-builder.js",
+  "zero-demo-guard.js"
 ]);
 
 mustInclude("smart_builder_js", smartJs, [
@@ -186,7 +200,8 @@ mustInclude("qa_mobile_html", qaHtml, [
   "copyReport",
   "reportBox",
   "site.config.json",
-  "בדיקות ידניות"
+  "בדיקות ידניות",
+  "zero-demo-guard.js"
 ]);
 
 mustInclude("qa_mobile_js", qaJs, [
@@ -200,6 +215,7 @@ mustInclude("qa_mobile_js", qaJs, [
   "smart-builder.css",
   "typography-extension.js",
   "advanced-typography-extension.js",
+  "zero-demo-guard.js",
   "scrollWidth",
   "copyReport",
   "buildReport"
@@ -212,7 +228,8 @@ mustInclude("typography_extension", typography, [
   "size-fluid-hero",
   "data-copy-font-prompt",
   "data-copy-size-prompt",
-  "data-copy-pair-prompt"
+  "data-copy-pair-prompt",
+  "תצוגת"
 ]);
 
 mustInclude("advanced_typography_extension", advancedTypography, [
@@ -223,6 +240,25 @@ mustInclude("advanced_typography_extension", advancedTypography, [
   "adv-leading-readable",
   "adv-system-math-premium",
   "data-adv-copy"
+]);
+
+mustInclude("zero_demo_guard", zeroGuard, [
+  "navigator.clipboard.writeText",
+  "MutationObserver",
+  "תוכן אמיתי בלבד",
+  "תצוגת"
+]);
+
+mustInclude("safe_generator", safeGenerator, [
+  "CONTENT_ONLY_REAL",
+  "ui_files_overwritten=false",
+  "תוכן אמיתי בלבד"
+]);
+
+mustInclude("zero_demo_audit", zeroAudit, [
+  "ZERO_DEMO_AUDIT_OK",
+  "scripts/generate-design-tokens-safe.cjs",
+  "safe_generator=present"
 ]);
 
 console.log("COLORS_DOCTOR_OK");
@@ -240,4 +276,7 @@ console.log("token_prompts=" + tokenPrompts);
 console.log("token_colors=" + tokenColors);
 console.log("smart_builder=present");
 console.log("mobile_qa=present");
+console.log("zero_demo_guard=present");
+console.log("safe_generator=present");
+console.log("truth_rule=content_only_real_or_legacy_no_demo");
 console.log("typography=advanced");
