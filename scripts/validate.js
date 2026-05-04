@@ -198,7 +198,7 @@ const qaCss = fs.readFileSync('qa-mobile.css', 'utf8');
 mustInclude('qa-mobile.css', qaCss, [
   '@media',
   'qa-shell',
-  'btn primary',
+  '.btn.primary',
   'checklist',
   'toast'
 ]);
