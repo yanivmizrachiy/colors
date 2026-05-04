@@ -53,11 +53,11 @@ function preview(token) {
   }
 
   if (token.type === 'font') {
-    return `<div class="preview" style="font-family:'${token.value}',Arial,sans-serif"><b>כותרת בעברית</b><span>טקסט לדוגמה בגופן הזה.</span></div>`;
+    return `<div class="preview" style="font-family:'${token.value}',Arial,sans-serif"><b>כותרת בעברית</b><span>תצוגת טקסט בגופן הזה.</span></div>`;
   }
 
   if (token.type === 'font-size') {
-    return `<div class="preview" style="font-size:${token.value}">דוגמת טקסט בגודל הזה</div>`;
+    return `<div class="preview" style="font-size:${token.value}">תצוגת טקסט בגודל הזה</div>`;
   }
 
   return `<div class="preview"><b>${escapeHtml(token.name)}</b><span>${escapeHtml((token.use || []).slice(0, 4).join(' · '))}</span></div>`;
@@ -114,7 +114,7 @@ function buildSelectedPrompt() {
     '- עברית RTL מלאה.',
     '- התאמה לנייד ולמחשב.',
     '- ללא גלילה אופקית.',
-    '- לא דמו, לא placeholder, ולא תוכן מומצא שמוצג כאמיתי.',
+    '- תוכן אמיתי בלבד, ללא תוכן זמני וללא תוכן מומצא שמוצג כאמיתי.',
     '- הפרדה בין HTML, CSS ו-JavaScript.',
     '- השתמש בבחירות האלה כסט עיצוב אחד עקבי ולא כאוסף מקרי.'
   ].join('\n');
