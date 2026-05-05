@@ -10,17 +10,20 @@ const checks={
   'advanced-typography-extension.js':['advancedTypography','adv-font-heebo','adv-size-hero-fluid','data-adv-copy'],
   'design-tokens.json':['tokens','categories','uses']
 };
-const forbidden=['כותרת לדוגמה','כותרת עברית לדוגמה','דוגמת טקסט','דוגמה לטקסט','טקסט לדוגמה','placeholder','mock','fake','lorem'];
+const forbidden=['כותרת לדוגמה','כותרת עברית לדוגמה','דוגמת טקסט','דוגמה לטקסט','טקסט לדוגמה','mock','fake','lorem'];
 const cleanerFiles=new Set(['zero-demo-guard.js']);
+function stripHtmlInputPlaceholders(file,text){return file.endsWith('.html')?text.replace(/\splaceholder\s*=\s*(['"])[\s\S]*?\1/gi,' data-real-input-hint="ok"'):text}
 let ok=0,fail=0;
 for(const [file,tokens] of Object.entries(checks)){
   try{
     const res=await fetch(BASE+file,{cache:'no-store'});
-    const text=await res.text();
+    let text=await res.text();
     if(!res.ok) throw new Error('HTTP '+res.status);
     for(const t of tokens) if(!text.includes(t)) throw new Error('missing '+t);
     if(!cleanerFiles.has(file)){
+      text=stripHtmlInputPlaceholders(file,text);
       for(const bad of forbidden) if(text.toLowerCase().includes(bad.toLowerCase())) throw new Error('forbidden '+bad);
+      if(!file.endsWith('.html')&&text.toLowerCase().includes('placeholder')) throw new Error('forbidden placeholder');
     }
     console.log('OK '+file); ok++;
   }catch(e){console.error('FAIL '+file+' '+e.message); fail++;}
