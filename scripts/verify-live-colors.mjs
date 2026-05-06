@@ -1,6 +1,9 @@
 const BASE='https://yanivmizrachiy.github.io/colors/';
 const checks={
-  'index.html':['smart-builder.html','qa-mobile.html','zero-demo-guard.js'],
+  'index.html':['colors-gallery.html','smart-builder.html','qa-mobile.html','zero-demo-guard.js'],
+  'colors-gallery.html':['colors-gallery.css','colors-gallery.js','colorGrid','העתק Prompt לכל הצבעים המוצגים','zero-demo-guard.js'],
+  'colors-gallery.css':['color-grid','color-swatch-large','color-number','color-copy'],
+  'colors-gallery.js':['design-tokens.json','colorPrompt','data-copy-prompt','copyVisibleColors'],
   'smart-builder.html':['searchInput','categoryChips','useChips','copySelectedPrompt','zero-demo-guard.js'],
   'qa-mobile.html':['qa-mobile.js','zero-demo-guard.js','הרץ בדיקות'],
   'qa-mobile.js':['runAllChecks','design-tokens.json','zero-demo-guard.js'],
