@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>גלריית צבעים — colors</title>
+  <meta name="theme-color" content="#1E3A8A">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="colors-gallery.css">
+</head>
+<body>
+  <main class="color-page">
+    <header class="color-hero">
+      <p class="eyebrow">בחירת צבע אמיתית</p>
+      <h1>גלריית צבעים חזותית</h1>
+      <p>כאן בוחרים לפי העין: כל צבע מוצג כמשבצת גדולה וברורה, עם מספר, HEX, HSL וכפתור העתקת Prompt ל־GPT.</p>
+      <div class="color-actions">
+        <a href="index.html">חזרה לספרייה</a>
+        <a href="smart-builder.html">Smart Builder</a>
+        <a href="qa-mobile.html">בדיקת נייד</a>
+      </div>
+    </header>
+
+    <section class="color-toolbar" aria-label="סינון צבעים">
+      <label>
+        חיפוש צבע
+        <input id="colorSearch" type="search" aria-label="חיפוש צבע לפי שם, HEX, HSL או שימוש">
+      </label>
+      <label>
+        שימוש
+        <select id="colorUseFilter" aria-label="סינון לפי שימוש">
+          <option value="הכול">הכול</option>
+        </select>
+      </label>
+      <button id="copyVisibleColors" type="button">העתק Prompt לכל הצבעים המוצגים</button>
+    </section>
+
+    <section id="colorStats" class="color-stats">טוען צבעים...</section>
+    <section id="colorGrid" class="color-grid" aria-live="polite"></section>
+  </main>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="colors-gallery.js"></script>
+  <script src="zero-demo-guard.js"></script>
+</body>
+</html>
