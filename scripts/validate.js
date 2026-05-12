@@ -40,9 +40,9 @@ mustInclude('script.js',js,['navigator.clipboard','openModal','data-copy','data-
 const galleryHtml=fs.readFileSync('colors-gallery.html','utf8');
 mustInclude('colors-gallery.html',galleryHtml,['colors-gallery.css','colors-gallery.js','colorGrid','copyVisibleColors','zero-demo-guard.js']);
 const galleryCss=fs.readFileSync('colors-gallery.css','utf8');
-mustInclude('colors-gallery.css',galleryCss,['color-grid','color-swatch-large','color-number','color-copy','@media']);
+mustInclude('colors-gallery.css',galleryCss,['family-strip','shade-strip','color-grid','swatch-button','quick-actions','@media']);
 const galleryJs=fs.readFileSync('colors-gallery.js','utf8');
-mustInclude('colors-gallery.js',galleryJs,['design-tokens.json','colorPrompt','data-copy-prompt','copyVisibleColors','padStart']);
+mustInclude('colors-gallery.js',galleryJs,['design-tokens.json','families','shades','familyOf','shadeOf','colorPrompt','data-copy-prompt','copyVisibleColors','padStart']);
 const smartHtml=fs.readFileSync('smart-builder.html','utf8');
 mustInclude('smart-builder.html',smartHtml,['searchInput','categoryChips','useChips','selectedList','copySelectedPrompt','clearSelected','smart-builder.js','zero-demo-guard.js']);
 const smartJs=fs.readFileSync('smart-builder.js','utf8');
