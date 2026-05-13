@@ -22,13 +22,16 @@ node scripts/validate.js
 echo "=== 4. colors gallery validation ==="
 node scripts/validate-colors-gallery.cjs
 
-echo "=== 5. local doctor ==="
+echo "=== 5. UX polish validation ==="
+node scripts/validate-ux-polish.cjs
+
+echo "=== 6. local doctor ==="
 node scripts/doctor.js
 
-echo "=== 6. zero demo audit ==="
+echo "=== 7. zero demo audit ==="
 node scripts/audit-zero-demo.js
 
-echo "=== 7. commit data cleanup if changed ==="
+echo "=== 8. commit data cleanup if changed ==="
 if [ -n "$(git status --porcelain design-tokens.json site.config.json)" ]; then
   git add design-tokens.json site.config.json
   git commit -m "Clean source design data truth wording"
@@ -38,7 +41,7 @@ else
   echo "PUSHED_DATA_CLEANUP=0"
 fi
 
-echo "=== 8. live verify with retries ==="
+echo "=== 9. live verify with retries ==="
 PASS=0
 for i in 1 2 3 4 5 6 7 8 9 10 11 12; do
   echo "LIVE_VERIFY_ATTEMPT=$i"
@@ -54,7 +57,7 @@ if [ "$PASS" != "1" ]; then
   exit 1
 fi
 
-echo "=== 9. final report ==="
+echo "=== 10. final report ==="
 mkdir -p STATE/termux
 REPORT="STATE/termux/COLORS_TRUTH_CLOSE_$(date '+%Y%m%d_%H%M%S').txt"
 {
@@ -64,6 +67,7 @@ REPORT="STATE/termux/COLORS_TRUTH_CLOSE_$(date '+%Y%m%d_%H%M%S').txt"
   echo "site=$SITE"
   echo "validate=OK"
   echo "colors_gallery=OK"
+  echo "ux_polish=OK"
   echo "doctor=OK"
   echo "zero_demo_audit=OK"
   echo "live_verify=OK"
