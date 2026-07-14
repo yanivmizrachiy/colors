@@ -1,0 +1,80 @@
+אתה עובד במיזם "קלוט-קוד" של יניב.
+
+מטרת-העל:
+לקדם באופן עמוק, שיטתי ומבוסס ראיות את המחקר והתכנון של מערכת העבודה האישית של יניב עם Claude Code. אין לבצע בשלב זה יישום בפרויקטים אחרים.
+
+קרא תחילה לפי הסדר:
+1. CLAUDE.md
+2. CURRENT_STATE.md
+3. PROJECT_GOALS.md
+4. docs/RESEARCH_PROGRAM.md
+5. docs/EVIDENCE_MODEL.md
+6. docs/ROADMAP.md
+7. research/REPOSITORY_INDEX.md
+8. research/CROSS_PROJECT_MATRIX.md
+9. research/OPPORTUNITY_REGISTER.md
+10. docs/USER_INPUT_PLAN.md
+
+גבולות מחייבים:
+- עבוד וכתוב רק בריפו המרכזי ובענף הנוכחי.
+- כל ריפו אחר הוא מקור מחקר בקריאה בלבד.
+- אין לבצע שינוי, commit, push, PR, merge, Issue, פריסה או שינוי הגדרות בריפו אחר.
+- שלב זה הוא מחקר ותכנון בלבד. אין ליישם Skills, Hooks, Agents, Rules, MCP, CI או אוטומציות בפרויקטים אחרים.
+- אין למחוק קבצים, לבצע force-push, reset --hard, git clean או לשכתב היסטוריה.
+- אין לקרוא או לשמור credentials, tokens, cookies, passwords, API keys, ערכי .env או תמלילי JSONL גולמיים.
+- אין להכניס לריפו מידע אישי, נתוני תלמידים או מידע רגיש.
+- אל תשכפל מידע שכבר קיים; עדכן את מקור האמת המתאים.
+
+תוכנית העבודה:
+1. בצע audit של הריפו המרכזי: חוסרים, כפילויות, סתירות, קישורים שבורים ומסמכים מיושנים.
+2. השלם מחקר עומק של misparim:
+   - מפה את CLAUDE.md ואת כל .ai-memory.
+   - מדוד סדר קריאה, אורכי קבצים, כפילויות, מידע מיושן ועלות context משוערת.
+   - נתח CURRENT_STATE, USER_RULES, CHANGE_PROTOCOL, TASKS, REQUIREMENTS, DECISIONS ו-PROMPTS.
+   - הפרד בין מידע קבוע, מצב זמני, היסטוריה, דרישות מוצר והוראות תהליך.
+   - בדוק commits ודפוסי תיקון ככל שהגישה מאפשרת.
+3. לאחר מכן המשך בדוחות עומק של maagar, microsoft-forms, www ו-bbb.
+4. השלם חוסרי ראיות בדוחות mathmath ו-parabula-next.
+5. חקור ממקורות רשמיים ועדכניים את Claude Code: memory, rules, skills, hooks, subagents, agent teams, MCP, plugins, permissions, worktrees, context, compact, clear, handoff, resume, models, effort, Git, review, testing, preview, deployment ו-security.
+6. מותר להפעיל subagents למחקרים עצמאיים. כל subagent חייב להיות read-only כלפי ריפוים אחרים ולהחזיר ראיות, מקורות, תאריכים ורמות ודאות.
+7. בצע inventory מקומי בטוח בלבד: גרסאות, שמות רכיבים, נתיבים, גדלים ו-hashes. אין לקרוא secrets או transcripts.
+
+לכל ממצא תעד:
+- עובדה, הסקה או השערה.
+- רמת ודאות A, B, C או D.
+- מקור ותאריך.
+- השפעה על איכות, זמן, בטיחות, context וטוקנים.
+
+לכל הזדמנות עתידית תעד:
+- הבעיה, התדירות והחומרה.
+- חלופות ופתרון פשוט יותר.
+- סיכון ועלות תחזוקה.
+- rollback ומדד הצלחה.
+- אין ליישם אותה.
+
+עדכן לפי הצורך:
+- docs/projects/<repository>.md
+- research/REPOSITORY_INDEX.md
+- research/CROSS_PROJECT_MATRIX.md
+- research/OPPORTUNITY_REGISTER.md
+- RESEARCH_LOG.md
+- CURRENT_STATE.md
+- docs/ROADMAP.md
+- docs/PERSONAL_WORK_SYSTEM_PLAN.md
+
+בקרת איכות:
+- חפש לפני יצירת קובץ.
+- אמת נתיבים וקישורים.
+- קרא את git diff במלואו.
+- ודא שכל שינוי שייך למחקר ולתכנון בלבד.
+- אל תסמן משימה כהושלמה בלי ראיות.
+- אל תעצור לאחר דוח אחד כל עוד קיימת עבודת מחקר בטוחה ורלוונטית.
+
+בסיום:
+1. כתוב סיכום מנהלים בתוך הריפו.
+2. עדכן מה הושלם ומה עדיין חסר.
+3. הרץ git status ו-git diff ובדוק את כל השינויים.
+4. בצע commit ממוקד לענף הנוכחי בלבד.
+5. דחוף את הענף ל-GitHub אם ההתחברות מאפשרת.
+6. אם GitHub CLI מחובר, פתח Pull Request אל main, אך אל תמזג אותו.
+7. דווח את שם הענף, ה-commit, ה-PR, הממצאים והצעד הבא.
