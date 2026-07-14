@@ -1,86 +1,184 @@
 # ממצאים רשמיים ועדכניים על Claude Code
 
-עודכן: 2026-07-14
+עודכן: 2026-07-15
 
-## מקורות
-המסמך מבוסס על התיעוד הרשמי של Claude Code:
-- Memory: `https://code.claude.com/docs/en/memory`
+> מסמך מחקר בלבד. הוא אינו דף כללים ואינו אישור להתקין הרחבה. מקור הכללים היחיד בקלוטקורד הוא `CLAUDE.md`.
+
+## מקורות רשמיים
+- Best practices: `https://code.claude.com/docs/en/best-practices`
+- Memory and rules: `https://code.claude.com/docs/en/memory`
+- Skills: `https://code.claude.com/docs/en/skills`
 - Hooks: `https://code.claude.com/docs/en/hooks`
 - Subagents: `https://code.claude.com/docs/en/sub-agents`
+- Agent teams: `https://code.claude.com/docs/en/agent-teams`
 - MCP: `https://code.claude.com/docs/en/mcp`
+- Plugins: `https://code.claude.com/docs/en/plugins`
+- Permissions: `https://code.claude.com/docs/en/permissions`
+- Settings and sandbox: `https://code.claude.com/docs/en/settings`
 - Costs: `https://code.claude.com/docs/en/costs`
+- Checkpointing: `https://code.claude.com/docs/en/checkpointing`
+- Scheduled tasks: `https://code.claude.com/docs/en/scheduled-tasks`
+- Official marketplace: `https://github.com/anthropics/claude-plugins-official`
+- Community marketplace: `https://github.com/anthropics/claude-plugins-community`
 
-## 1. זיכרון והוראות
+## 1. העיקרון המרכזי: Context הוא המשאב הקריטי
 ### עובדות רשמיות
-- `CLAUDE.md` ו-auto memory נטענים בתחילת כל שיחה.
-- `CLAUDE.md` הוא הקשר מנחה, לא שכבת אכיפה קשיחה.
-- היעד הרשמי הוא פחות מ-200 שורות לכל `CLAUDE.md`; קבצים ארוכים יותר צורכים יותר context ועלולים להפחית היענות.
-- `@imports` עוזרים לארגון אך עדיין נטענים בתחילת הסשן ולכן אינם חוסכים context.
-- `.claude/rules/` מאפשר כללים מודולריים; rules עם `paths` נטענים רק כשניגשים לקבצים תואמים.
-- Skills מיועדים לתהליך רב-שלבי או מידע משימתי שאינו צריך להיות תמיד ב-context.
-- auto memory טוען רק את 200 השורות הראשונות או 25KB של `MEMORY.md`; קבצי נושא נטענים לפי צורך.
+- כל הודעה, קובץ שנקרא, פלט פקודה, CLAUDE, skill listing ו־MCP schema צורכים context.
+- ביצועי המודל עלולים להידרדר כאשר ה־context מתמלא.
+- `/clear` מומלץ בין משימות לא קשורות.
+- `/compact <instructions>` מאפשר לשלוט במה שנשמר בסיכום.
+- `/btw` מתאים לשאלה קצרה שאינה צריכה להיכנס להיסטוריית השיחה.
+- sessions ארוכים שלא נוקו ו־Opus כברירת מחדל הם גורמים מרכזיים לשימוש גבוה.
 
 ### המשמעות עבור יניב
-- אין להעתיק את מודל `parabula-next` של מסמך ארוך לכל פרויקט.
-- `CLAUDE.md` צריך להכיל רק גבולות, מקורות אמת, פקודות בדיקה וכללי עבודה שחייבים בכל משימה.
-- חוזי UI, A4, Moodle, DB או נושא מתמטי צריכים לעבור ל-rules לפי path או למסמכי מוצר שנקראים לפי צורך.
-- auto memory מתאים ללמידות מקומיות ולתיקונים חוזרים, אך צריך לבצע ביקורת תקופתית עם `/memory`.
+- משימה אחת משמעותית לכל session.
+- session חדש עדיף לאחר שני ניסיונות תיקון כושלים באותו כיוון.
+- פלטי logs, repository research ו־CI ארוכים עוברים ל־Subagent או לקובץ artifact מסונן.
+- אין להפעיל צוותים או skill packs רבים “ליתר ביטחון”.
 
-## 2. Hooks
+## 2. `CLAUDE.md`, Rules ו־Auto Memory
 ### עובדות רשמיות
-- Hooks רצים בנקודות קבועות במחזור החיים ויכולים לאכוף התנהגות ללא תלות בהחלטת המודל.
-- `PreToolUse` יכול לאפשר, לחסום, לבקש אישור, לדחות או לשנות קלט של כלי לפני ההפעלה.
-- ב-command hook, קוד יציאה 2 הוא החסימה האמינה ברוב האירועים; קוד 1 בדרך כלל אינו חוסם.
-- Hooks יכולים להיות גלובליים, פרויקטליים או מוגבלים ל-Skill/Subagent.
+- `CLAUDE.md` ו־auto memory נטענים בתחילת שיחה.
+- `CLAUDE.md` הוא context מנחה ולא אכיפה קשיחה.
+- יעד מומלץ: פחות מ־200 שורות; ארוך יותר צורך context ועלול להפחית adherence.
+- imports עם `@` עוזרים לארגון אך עדיין נטענים ואינם חוסכים context.
+- `.claude/rules/` יכול לטעון הוראות לפי path רק כאשר Claude ניגש לקבצים תואמים.
+- Rules ללא `paths` נטענים בכל session ולכן עלולים להפוך לעוד CLAUDE מפוצל.
+- Auto memory טוען בתחילת session רק את 200 השורות הראשונות או 25KB של `MEMORY.md`; קבצי נושא נקראים לפי צורך.
+- `/memory` מציג מה נטען ומאפשר ביקורת של auto memory.
 
 ### המשמעות עבור יניב
-- כללים כמו “לא push ישירות ל-main”, “לא לשנות ריפו אחר”, “לא לקרוא `.env`”, “לא למחוק קבצים” מתאימים בעתיד ל-hook או permissions, לא לעוד פסקה בזיכרון.
-- אין להוסיף hooks רבים מראש. מתחילים רק בחסימות קריטיות שהוכחו כחוזרות.
+- קלוטקורד משתמש ב־`CLAUDE.md` אחד כמקור כללים.
+- בפרויקטים גדולים ניתן להשתמש ב־path rules רק לחוזים תחומיים אמיתיים, לא לשכפול workflow.
+- Auto memory מתאים ל־gotchas וללמידות מקומיות, אך דורש audit תקופתי.
 
-## 3. Subagents
+## 3. דרך עבודה מומלצת
 ### עובדות רשמיות
-- כל subagent פועל ב-context נפרד עם system prompt, tools והרשאות משלו.
-- הם מתאימים למחקר צדדי שמייצר חיפושים, לוגים או קבצים שלא צריך להשאיר בשיחה הראשית.
-- השיחה הראשית מתאימה יותר למשימות קצרות, משימות עם הרבה הלוך-חזור או שלבים שחולקים context משמעותי.
-- Agent teams צורכים context נפרד לכל teammate ולכן הצריכה גדלה בקירוב עם מספר הסוכנים הפעילים.
+- Anthropic ממליצה לתת ל־Claude דרך לאמת עבודה: tests, build, screenshot או signal אחר.
+- workflow מומלץ למשימה לא־ברורה: Explore → Plan → Implement → Commit.
+- לתיקון קטן וברור ניתן לדלג על Plan mode כדי לא להוסיף overhead.
+- prompt מדויק עם scope, קבצים, symptom, דוגמה וקריטריון הצלחה מפחית תיקונים.
+- Claude יכול “לראיין” את המשתמש לפני feature גדול וליצור spec; לאחר מכן מומלץ session נקי לביצוע.
+- course correction מוקדם יעיל יותר משיחה ארוכה עם ניסיונות כושלים.
 
 ### המשמעות עבור יניב
-- לא להפעיל agent teams כברירת מחדל.
-- Subagent אחד לקריאה בלבד יכול להיות יעיל למחקר ריפו, בדיקת CI או ביקורת אבטחה.
-- שינוי נקודתי או פיצ'ר שדורש תכנון→יישום→בדיקה צריך להישאר בשיחה הראשית.
+- תבנית המשימה הקצרה מתאימה יותר מ־super-prompt.
+- שינוי UI/RTL/A4/PDF חייב screenshot או preview שניתן להשוות.
+- שינוי מורכב מתחיל בחקירה ותוכנית; שינוי נקודתי מתחיל ישירות.
 
-## 4. MCP
+## 4. Skills
 ### עובדות רשמיות
-- MCP מחבר את Claude Code לכלים ומקורות נתונים חיצוניים.
-- יש scope מקומי, פרויקטלי ומשתמש; קונפיגורציה פרויקטלית נשמרת ב-`.mcp.json`.
-- Tool Search מופעל כברירת מחדל ודוחה טעינת schemas עד שהכלי נדרש, ולכן רק הכלים שנעשה בהם שימוש נכנסים ל-context.
-- יש לאמת אמון בכל MCP; מקורות חיצוניים עלולים לחשוף את המערכת ל-prompt injection.
+- Skill הוא תיקייה עם `SKILL.md`, frontmatter ותוכן שנטען לפי invocation או relevance.
+- `description` קובע מתי Claude יפעיל Skill אוטומטית.
+- `disable-model-invocation: true` מונע הפעלה אוטומטית ומתאים ל־deploy, commit ופעולות צד.
+- ניתן להגביל `allowed-tools`, להסיר `disallowed-tools`, לבחור model/effort ולהפעיל ב־forked context.
+- גוף Skill שניטען נשאר ב־context לאורך התור והשיחה הרלוונטית; כל שורה היא עלות חוזרת.
+- רשימת שמות ותיאורי Skills עצמה צורכת context; כאשר יש רבים, תיאורים נחתכים לפי budget.
+- `/doctor` ו־`/context` מסייעים לזהות עלות skill listing.
 
 ### המשמעות עבור יניב
-- לא צריך להתקין MCP רבים “ליתר ביטחון”.
-- להשאיר רק חיבורים שבאמת מחליפים העתקה ידנית תכופה: GitHub, Vercel/hosting, DB או browser כשהם נדרשים.
-- הרשאות כתיבה חזקות צריכות להיות project-scoped או מופעלות רק במשימה שבה הן נדרשות.
+- Skill מתאים ל־workflow חוזר ורב־שלבי, לא לכל כלל קטן.
+- מתחילים ב־Skill אחד בלבד לאחר מדידה: `safe-change`, `ui-verify`, `repo-audit` או `handoff`.
+- Skills בעלי side effects יהיו ידניים ועם tools מצומצמים.
 
-## 5. עלות וטוקנים
+## 5. Hooks
 ### עובדות רשמיות
-- צריכת הטוקנים גדלה עם גודל ה-context.
-- `/usage` מציג שימוש בסשן ובתוכניות מנוי גם חלוקה משוערת לפי Skills, Subagents, Plugins ו-MCP.
-- ההמלצות הרשמיות כוללות `/clear` בין משימות לא קשורות, `/compact` עם מוקד, בחירת מודל לפי המשימה, העברת מידע משימתי מ-CLAUDE ל-Skills ושימוש ב-subagents לפלטים רועשים.
-- sessions ארוכים שלא נוקו ו-Opus כברירת מחדל הם גורמים מרכזיים לשימוש גבוה.
+- Hooks רצים בנקודות קבועות במחזור החיים ואינם תלויים בכך שהמודל “יזכור”.
+- `PreToolUse` יכול allow, deny, ask, defer או לשנות input לפני כלי.
+- Hooks יכולים להיות גלובליים, פרויקטליים או תחומים ל־Skill/Subagent.
+- Hook אינו עוקף deny/ask של permissions.
+- חסימה ב־Hook יכולה לעצור פעולה גם אם קיימת allow permission.
 
 ### המשמעות עבור יניב
-- Opus/high effort אינו ברירת מחדל; הוא שמור לארכיטקטורה, חקירת שורש או החלטה מסוכנת.
-- רוב עבודת הקוד השוטפת צריכה להתבצע ב-Sonnet עם effort רגיל או גבוה לפי הצורך.
-- לאחר משימה או מעבר לפרויקט אחר: `/rename`, ואז `/clear`; חוזרים עם `/resume` רק כשצריך.
-- במחקר ארוך: `/compact Focus on verified findings, open risks, changed files, and next steps`.
+- Hook מתאים לחסימה דטרמיניסטית שחייבת לעבוד תמיד.
+- לפני Hook בודקים אם permission deny או sandbox נותנים פתרון פשוט יותר.
+- אין Hook שמריץ build מלא לאחר כל edit; הוא יקר ומאט את העבודה.
 
-## 6. מסקנה רשמית-מעשית
-ארכיטקטורת היעד עבור יניב היא:
-1. `CLAUDE.md` קצר.
-2. rules לפי path לחוזים תחומיים.
-3. Skill רק לתהליך חוזר ורב-שלבי.
-4. Hook רק לכלל קריטי ודטרמיניסטי.
-5. Subagent למחקר רועש ומבודד.
-6. MCP רק לחיבור שנמצא בשימוש.
-7. Session חדש לכל משימה משמעותית שאינה קשורה לקודמת.
-8. מדידה עם `/usage` לפני ואחרי פיילוט.
+## 6. Permissions ו־Sandbox
+### עובדות רשמיות
+- סדר ההכרעה הוא deny → ask → allow; deny גובר על כל allow.
+- ניתן להגדיר כללים ל־Bash, PowerShell, Read, Edit, WebFetch, MCP ו־Agents.
+- Read/Edit deny מכסים כלי קבצים מובנים וחלק מפקודות shell מזוהות, אך לא כל subprocess אפשרי.
+- sandbox מספק גבול OS לתהליכי shell ולגישה לקבצים/רשת.
+- sandbox מלא נתמך ב־macOS, Linux ו־WSL2; יש לבדוק התאמה לסביבת Windows של יניב.
+- symlinks נבדקים גם לפי הנתיב וגם לפי היעד, אך עדיין נדרשת זהירות עם קוד חיצוני.
+
+### המשמעות עבור יניב
+- permissions מצומצמות הן שכבה ראשונה להפחתת אישורים בלי allow-all.
+- deny ל־`.env`, credentials, SSH ופקודות הרסניות הוא מועמד חזק.
+- push/deploy/DB נשארים ask או manual.
+
+## 7. Subagents ו־Agent Teams
+### עובדות רשמיות
+- Subagent עובד ב־context נפרד ומחזיר summary לשיחה הראשית.
+- השיחה הראשית עדיפה כאשר יש הלוך־חזור, שינוי קטן או שלבים שחולקים context משמעותי.
+- Subagent עדיף למחקר, logs, audit או verification מבודדים.
+- Agent Teams הם experimental ומושבתים כברירת מחדל.
+- כל teammate הוא instance ו־context נפרד; העלות גדלה בקירוב עם מספר הסוכנים.
+- Teams מתאימים לעבודות עצמאיות מקביליות: השערות debug מתחרות, שכבות נפרדות או מחקר רב־זוויתי.
+- הם פחות מתאימים לעריכות באותו קובץ, עבודה סדרתית או משימות עם תלויות הדוקות.
+
+### המשמעות עבור יניב
+- לא להפעיל Agent Teams כברירת מחדל.
+- Subagent אחד read-only הוא מועמד טוב ל־repo audit, CI או security review.
+- צוות נשקל רק במשימה גדולה שבה שלושה תחומים יכולים לעבוד באמת במקביל.
+
+## 8. MCP ו־CLI
+### עובדות רשמיות
+- MCP מחבר Claude לכלים ומקורות חיצוניים; project-scoped servers דורשים approval.
+- MCP חיצוני עלול לחשוף את המערכת ל־prompt injection או לכלים עם side effects.
+- Anthropic מציינת שכלי CLI כגון `gh` הם לעיתים הדרך היעילה ביותר ב־context לעבודה עם שירותים.
+
+### המשמעות עבור יניב
+- `gh` CLI מועדף ל־GitHub כאשר הוא מספק את הפעולה הנדרשת.
+- MCP נשקל רק כאשר הוא מחליף עבודה ידנית חוזרת או נותן מידע שלא ניתן לקבל ביעילות דרך CLI/API.
+- מתחילים ב־read-only וב־project scope.
+
+## 9. Plugins ו־Marketplaces
+### עובדות רשמיות
+- Plugin יכול לארוז Skills, Hooks, Agents, MCP, LSP ו־settings.
+- Anthropic מפעילה marketplace רשמי ו־community marketplace שעובר review וסריקה אוטומטית.
+- Plugins בקהילה pinned ל־commit SHA בקטלוג.
+- גם repository הרשמי מזהיר שעל המשתמש לסמוך על ה־Plugin ולבדוק מה הוא כולל; Anthropic אינה מבטיחה שלא ישתנה או שיעבוד כמצופה.
+- לשפות typed כגון TypeScript מומלץ להשתמש ב־LSP plugins מוכנים מה־marketplace הרשמי.
+
+### המשמעות עבור יניב
+- TypeScript LSP רשמי הוא מועמד בעדיפות גבוהה לפיילוט.
+- “עבר review במרקטפלייס” אינו מחליף code review, בדיקת permissions ו־rollback.
+- אין התקנת bundles גדולים של agents/skills לפני מדידת צורך.
+
+## 10. Checkpoints, Rewind ו־Git
+### עובדות רשמיות
+- כל prompt יוצר checkpoint וניתן להשתמש ב־`/rewind` או Escape כפול.
+- checkpoints יכולים לשחזר שיחה, קוד או שניהם.
+- הם עוקבים אחרי שינויים שבוצעו בכלי העריכה של Claude, לא בהכרח אחרי Bash או תהליכים חיצוניים.
+- Checkpoints אינם תחליף ל־Git.
+
+### המשמעות עבור יניב
+- checkpoint מתאים לניסוי מקומי קצר.
+- branch/commit/PR נשארים מנגנון האמת וה־rollback לשינוי משמעותי.
+
+## 11. Scheduled Tasks ואוטומציה
+### עובדות רשמיות
+- Claude Code יכול להריץ prompts לפי schedule.
+- Skill ידני עם `disable-model-invocation: true` אינו מופעל אוטומטית דרך scheduled task כברירת מחדל בגרסאות עדכניות.
+- אוטומציה רציפה יכולה לצרוך context, tokens והרשאות גם ללא מעקב צמוד.
+
+### המשמעות עבור יניב
+- Scheduled task מתאים בעתיד לביקורת חודשית read-only, לא לשינוי קוד או deploy אוטומטי.
+- נדרש תנאי עצירה, output מצומצם ו־notification רק כשיש ממצא משמעותי.
+
+## 12. ארכיטקטורת היעד לקלוטקורד
+1. `CLAUDE.md` אחד וקצר כמקור כללים.
+2. `CURRENT_STATE.md` קצר למצב פעיל בלבד.
+3. Rules לפי path רק בפרויקט שבו יש domains אמיתיים.
+4. Skill אחד בכל פיילוט, לתהליך חוזר.
+5. Permission deny/ask לפני Hook.
+6. Hook רק לחובה דטרמיניסטית.
+7. Subagent לקריאה/חקירה רועשת.
+8. Agent Teams רק לעבודה מקבילית עצמאית ונדירה.
+9. MCP רק לחיבור שנמצא בשימוש; CLI כאשר הוא יעיל יותר.
+10. Plugin רשמי לפני קהילתי; LSP TypeScript כמועמד ראשון.
+11. Session נקי לכל משימה משמעותית.
+12. בדיקות וראיות לפני טענת הצלחה.
+13. מדידה עם `/usage`, `/context`, זמן, תיקונים ורגרסיות.
