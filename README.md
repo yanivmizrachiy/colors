@@ -2,54 +2,66 @@
 
 מרכז השליטה של יניב למחקר, תכנון ושיפור העבודה עם Claude Code.
 
+## מטרת־העל
+לבנות מערכת עבודה אישית שמקצרת זמן, מצמצמת טעויות ושימוש מיותר, ושומרת על איכות, Git, בדיקות, פריסה, פרטיות והמשכיות בין מחשבים.
+
 ## מצב נוכחי
-מחקר ותוכנית עבודה אישית **גרסה 1 הושלמו**. עדיין לא מיושמים Skills, Hooks, Rules או שינויים בריפוים אחרים לפני אישור יניב ופיילוט מדיד.
-
-## המסמכים החשובים ביותר
-- `docs/YANIV_DAILY_GUIDE.md` — המדריך הקצר לעבודה יומיומית.
-- `docs/PERSONAL_WORK_SYSTEM_PLAN.md` — התוכנית האישית המלאה.
-- `docs/OFFICIAL_CLAUDE_CODE_FINDINGS.md` — ממצאים מהתיעוד הרשמי.
-- `CURRENT_STATE.md` — מצב נוכחי והצעד הבא.
-- `docs/ROADMAP.md` — מה הושלם ומה נשאר.
-
-## דוחות הריפוים
-- `docs/projects/mathmath.md`
-- `docs/projects/parabula-next.md`
-- `docs/projects/misparim.md`
-- `docs/projects/maagar.md`
-- `docs/projects/microsoft-forms.md`
-- `docs/projects/www.md`
-- `docs/projects/bbb.md`
-
-## מרכזי המחקר
-- `research/REPOSITORY_INDEX.md` — תמונת מצב של כל הריפוים.
-- `research/CROSS_PROJECT_MATRIX.md` — הדפוסים שנמצאו.
-- `research/OPPORTUNITY_REGISTER.md` — סדר העדיפויות לשיפורים עתידיים.
-- `RESEARCH_LOG.md` — יומן המחקר.
-
-## מתודולוגיה ובטיחות
-- `CLAUDE.md` — שער הכניסה של הריפו.
-- `docs/RESEARCH_PROGRAM.md` — תוכנית המחקר.
-- `docs/EVIDENCE_MODEL.md` — עובדות, הסקות, השערות ורמות ודאות.
-- `docs/SECURITY_AND_PRIVACY.md` — פרטיות ואיסוף בטוח.
-- `docs/USER_INPUT_PLAN.md` — מידע מקומי שמותר לאסוף בעתיד.
-
-## ההחלטה התכנונית
-המערכת המומלצת אינה “Claude ענק שעושה הכול” ואינה “המון קובצי הוראות”. היא בנויה כך:
-1. זיכרון גלובלי קצר.
-2. `CLAUDE.md` קצר לכל פרויקט.
-3. state קצר ונפרד.
-4. rules לפי path.
-5. בדיקות/guards לכללים דטרמיניסטיים.
-6. Skill רק לתהליך שחזר.
-7. Subagent רק למחקר מבודד.
-8. Sonnet כברירת מחדל; Opus רק למשימות מורכבות/מסוכנות.
-9. מדידה לפני הרחבה.
+- מחקר ותוכנית עבודה אישית — הושלמו בגרסה 1.
+- חבילת פיילוט מדידה — מוכנה.
+- לא בוצע שינוי בשום ריפו נחקר.
+- שינוי ב־`misparim` או בריפו אחר דורש הוראה מפורשת ונפרדת של יניב.
 
 ## גבול מחייב
-- ריפוים אחרים משמשים לקריאה ומחקר בלבד במסגרת המיזם.
-- אין לשמור secrets, תמלילים גולמיים או נתוני תלמידים.
-- אין יישום לפני אישור ופיילוט עם rollback.
+ריפוים אחרים משמשים למחקר בקריאה בלבד. הוראות כלליות כגון “תתקדם אוטומטית” מאפשרות להתקדם בריפו המרכזי הזה בלבד ואינן אישור לשנות פרויקט אחר.
+
+## נקודת הכניסה המומלצת
+1. `docs/YANIV_DAILY_GUIDE.md` — מדריך קצר לעבודה יומיומית.
+2. `docs/PERSONAL_WORK_SYSTEM_PLAN.md` — התוכנית האישית המלאה.
+3. `docs/PILOT_MISPARIM_READINESS.md` — הפיילוט המוכן למדידה.
+4. `templates/CLAUDE_TASK_BRIEF.md` — נוסח משימה קצר ונכון.
+5. `templates/BASELINE_SESSION_RECORD.md` — תיעוד baseline והשוואה.
+6. `research/IMPLEMENTATION_PRIORITY.md` — סדר העדיפויות ליישום.
+
+## מפת ניווט
+### כניסה וניהול
+- `CLAUDE.md` — שער כניסה קצר ומחייב.
+- `PROJECT_GOALS.md` — מטרות ומדדי הצלחה.
+- `CURRENT_STATE.md` — מצב נוכחי קצר.
+- `DECISIONS.md` — החלטות מחייבות.
+- `RESEARCH_LOG.md` — יומן המחקר.
+- `docs/ROADMAP.md` — שלבים שהושלמו והשלבים הבאים.
+
+### מחקר
+- `docs/OFFICIAL_CLAUDE_CODE_FINDINGS.md` — ממצאים מהתיעוד הרשמי.
+- `docs/projects/` — דוחות עומק על הריפוים.
+- `research/REPOSITORY_INDEX.md` — מצב כל ריפו.
+- `research/CROSS_PROJECT_MATRIX.md` — דפוסים חוצי־פרויקטים.
+- `research/OPPORTUNITY_REGISTER.md` — הזדמנויות עתידיות.
+
+### מתודולוגיה ובטיחות
+- `docs/RESEARCH_PROGRAM.md` — תוכנית המחקר.
+- `docs/EVIDENCE_MODEL.md` — עובדות, הסקות ורמות ודאות.
+- `docs/USER_INPUT_PLAN.md` — איסוף מידע בטוח ומסונן.
+- `docs/SECURITY_AND_PRIVACY.md` — כללי פרטיות.
+
+## המודל שנבחר
+- זיכרון גלובלי קצר מאוד.
+- `CLAUDE.md` קצר לכל פרויקט.
+- `CURRENT_STATE.md` חי וקצר.
+- Rules לפי path ותחום.
+- מסמכי מוצר כבדים נקראים לפי צורך בלבד.
+- Sonnet כברירת מחדל; Opus רק לתכנון/שורש/סיכון גבוה.
+- Skill או Hook רק לאחר צורך שחזר ומדידה.
+- בדיקות מדורגות: static → build → interaction → environment → live.
+
+## כללי איכות
+1. מקור אמת אחד לכל סוג מידע.
+2. לא טוענים לשיפור בלי baseline והשוואה.
+3. לא בונים אוטומציה רק משום שהיא אפשרית.
+4. כלל דטרמיניסטי עובר ל־test/guard לאחר שהצורך הוכח.
+5. PASS טכני אינו שווה READY לפרסום.
+6. אין מידע רגיש בריפו הציבורי.
+7. אין שינוי בריפו אחר ללא אישור מפורש.
 
 ## גיבוי
-התוכן המקורי של `colors` נשמר בענף `archive/colors-original-2026-07-14`.
+התוכן המקורי של `colors` נשמר בענף `archive/colors-original-2026-07-14` ואין למחוק אותו.
