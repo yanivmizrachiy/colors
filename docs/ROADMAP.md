@@ -1,17 +1,27 @@
-# תוכנית עבודה
+# תוכנית העבודה של קלוטקורד
+
+> מפת שלבים בלבד. מקור הכללים המחייב היחיד הוא `CLAUDE.md`; המצב החי נמצא ב־`CURRENT_STATE.md`.
 
 ## מצב
-שלב המחקר, התכנון והכנת הפיילוט לגרסה 1 הושלם. הפיילוט נמצא כעת בשלב **baseline מול מועמד שינוי מוכן**. אין merge ב־`misparim` לפני השלמת המדידות והדיווח.
+המחקר והתוכנית האישית לגרסה 1 הושלמו. קלוטקורד נמצא כעת בשלושה מסלולים מסודרים:
+1. ניקוי והקשחת הריפו המרכזי.
+2. baseline מול מועמד שינוי מוכן ב־`misparim`.
+3. מחקר ודירוג הרחבות לפני פיילוט של Plugin או Skill אחד.
 
-## שלב 0 — תשתית
+## שלב 0 — תשתית קלוטקורד
 - [x] בחירת ריפו מרכזי.
 - [x] גיבוי מלא לתוכן `colors` הישן.
-- [x] הגדרת גבולות, פרטיות ומודל ראיות.
+- [x] הגדרת פרטיות ומודל ראיות.
 - [x] בניית אינדקס, מטריצה ורשם הזדמנויות.
-- [ ] שינוי שם הריפו לשם מוסכם.
-- [ ] שינוי Visibility ל־Private.
+- [x] קביעת שם המיזם: **קלוטקורד**.
+- [x] יצירת `CLAUDE.md` כדף כללים מחייב יחיד.
+- [x] סימון `DECISIONS.md` כהיסטוריית החלטות בלבד.
+- [x] הסרת פרומפט ההפעלה הישן של מחשב הסלון.
+- [x] הסרת מסמך כללי אבטחה כפול.
+- [ ] Rename של ה־slug מ־`colors` ל־`klotkord` דרך GitHub.
+- [ ] החלטה אם להפוך את הריפו ל־Private.
 
-## שלב 1 — מחקר ריפוים
+## שלב 1 — מחקר העבודה האמיתית
 - [x] `mathmath` — זיכרון קצר, PRs ובדיקות מול פערי runtime/Vercel.
 - [x] `parabula-next` — מקור כללים יחיד, thin pointers ו־CI רחב.
 - [x] `misparim` — זיכרון מדורג, כפילויות ועלות טעינה.
@@ -20,73 +30,96 @@
 - [x] `www` — truth gates, release readiness ועומס STATE.
 - [x] `bbb` — הוראות מקומיות לפי תת־פרויקט.
 - [x] הפקת דפוסים חוצי־פרויקטים.
-- [x] זיהוי מקורות בזבוז: context קבוע, מסמכי state, agent teams, PRs גדולים ו־CI כפול.
+- [x] זיהוי מקורות בזבוז: context קבוע, state כפול, agent teams, PRs גדולים ו־CI כפול.
 
-## שלב 2 — מחקר רשמי של Claude Code
-- [x] Memory, CLAUDE.md, auto memory ו־rules לפי path.
+## שלב 2 — מחקר Claude Code עדכני
+- [x] Memory, CLAUDE.md, auto memory ו־path rules.
+- [x] Skills ו־skill listing cost.
 - [x] Hooks ו־PreToolUse.
-- [x] Subagents ו־agent teams.
-- [x] MCP ו־Tool Search.
-- [x] `/usage`, `/clear`, `/compact`, מודלים וצריכת טוקנים.
-- [ ] inventory מקומי מצומצם של הכלים המותקנים בפועל.
-- [ ] baseline `/usage` על שלוש משימות דומות.
+- [x] Permissions ו־PowerShell rules.
+- [x] Sandbox והבדלי Windows/WSL2.
+- [x] Subagents ו־Agent Teams.
+- [x] MCP, Tool Search ו־CLI.
+- [x] Plugins, official/community marketplaces ו־LSP.
+- [x] Checkpoints, rewind ו־sessions.
+- [x] Scheduled tasks ואוטומציה.
+- [x] `/usage`, `/context`, `/clear`, `/compact`, מודלים ו־effort.
+- [x] רשם מועמדי הרחבות: `research/EXTENSION_CANDIDATES.md`.
+- [ ] inventory מקומי מסונן של גרסה ורכיבים מותקנים בפועל.
+- [ ] אימות שם ודרישות ה־Plugin הרשמי ל־TypeScript LSP.
 
-## שלב 3 — תוכנית אישית
+## שלב 3 — תוכנית אישית גרסה 1
 - [x] ארכיטקטורת זיכרון גלובלית ופרויקטלית.
-- [x] מבנה `CLAUDE.md`, `CURRENT_STATE` ו־path rules.
 - [x] סיווג משימות קטנות/בינוניות/גדולות.
 - [x] מדיניות Sonnet/Opus/effort.
 - [x] כללי context, clear, compact ו־handoff.
 - [x] מדיניות Subagents ו־MCP.
-- [x] מועמדים מדורגים ל־Hooks ול־Skills.
 - [x] Git/PR/deploy workflow.
-- [x] מודל אימות מדורג: static → build → interaction → environment → live.
+- [x] מודל אימות: static → build → interaction → environment → live.
 - [x] בחירת `misparim` כמועמד פיילוט.
+- [ ] עדכון לתוכנית סופית גרסה 2 לאחר inventory, baseline ופיילוט הרחבה.
 
-## שלב 3.5 — מוכנות לפיילוט
-- [x] מסמך פיילוט מפורט.
-- [x] שלוש קטגוריות משימה להשוואה.
-- [x] תבנית רישום baseline/post-change.
-- [x] תנאי הצלחה כמותיים.
-- [x] תנאי עצירה ו־rollback.
-- [x] task brief קצר ואחיד.
-- [x] סדר עדיפויות ליישום.
-- [x] קביעה שהפיילוט הראשון אינו כולל Skill/Hook/Agent/MCP חדש.
-- [x] יצירת ענף ו־PR מבודד ב־`misparim` ללא שינוי קוד מוצר.
-- [x] אימות שה־PR פתוח, mergeable ו־Vercel success.
-
-## שלב 4 — פיילוט פעיל
+## שלב 4 — פיילוט הזיכרון ב־`misparim`
 ### A — Baseline על המצב הישן
-- [ ] לבצע שלוש משימות מייצגות על `misparim/main` ב־SHA `ce020c8fcf026f0ba1909f5844a49ab7ac0aafe3`.
+- [ ] לבצע P1: משימה קטנה עם preview.
+- [ ] לבצע P2: משימה בינונית עם typecheck/build/preview.
+- [ ] לבצע P3: חקירת bug/repository, read-only תחילה.
 - [ ] להתחיל כל משימה ב־session חדש.
-- [ ] להשתמש באותו מודל וב־effort דומה למשימות ההשוואה.
-- [ ] לתעד זמן, `/usage`/context, קבצים שנקראו, תיקונים ובדיקות.
-- [ ] לוודא שהמשימות תקינות להשוואה.
+- [ ] להשתמש באותו model/effort במשימת ההשוואה המקבילה.
+- [ ] לתעד זמן, `/usage`/context, קבצים, תיקונים ובדיקות.
 
 ### B — מועמד שינוי מוכן, לא ממוזג
-- [x] לעבוד בענף `pilot/claude-memory-v1` וב־PR #1 בלבד.
-- [x] לקצר state חי.
-- [x] להסיר כפילויות בין מסמכי הכניסה.
-- [x] להוסיף שני path rules בלבד.
-- [x] לא לשנות קוד מוצר.
-- [x] להגדיר rollback באמצעות revert של ה־PR.
-- [ ] לבצע review אחרון לאחר השלמת baseline.
-- [ ] להחליט אם למזג; אין merge אוטומטי.
+- [x] ענף `pilot/claude-memory-v1` ו־PR #1.
+- [x] `CURRENT_STATE` קצר.
+- [x] צמצום כפילויות.
+- [x] שני path rules בלבד.
+- [x] אין שינוי קוד מוצר.
+- [x] rollback באמצעות revert.
+- [ ] review אחרון לאחר baseline.
+- [ ] החלטת merge מפורשת.
 
 ### C — Post-change והשוואה
-- [ ] לאחר merge מאושר: לבצע שלוש משימות דומות בגודל ובסיכון.
-- [ ] להשוות tokens/context, זמן, תיקונים, רגרסיות ומעורבות יניב.
-- [ ] להחליט: keep, adjust או revert.
-- [ ] רק לאחר הוכחה: להחליט אם דרוש Skill או Hook אחד.
+- [ ] שלוש משימות מקבילות לאחר merge מאושר.
+- [ ] השוואת context/tokens, זמן, תיקונים, רגרסיות ומעורבות יניב.
+- [ ] החלטה: keep, adjust או revert.
 
-## שלב 5 — הרחבה עתידית
+## שלב 5 — פיילוט הרחבה אחד
+השלב מתחיל רק לאחר inventory ובחירת בעיה מדידה.
+
+### סדר מועמדים
+1. [ ] TypeScript LSP Plugin רשמי בפרויקט אחד.
+2. [ ] Permission profile בטוח ומצומצם.
+3. [ ] Skill ידני אחד: `safe-change` או `ui-verify`.
+4. [ ] Subagent/Skill `repo-audit` read-only.
+5. [ ] Skill `handoff`.
+
+### תנאי פיילוט
+- [ ] baseline לפני התקנה.
+- [ ] מקור ו־commit מאומתים.
+- [ ] review של permissions, code ו־dependencies.
+- [ ] מדד הצלחה ו־rollback.
+- [ ] התקנה בפרויקט אחד בלבד.
+- [ ] החלטת keep/remove לפני הרחבה.
+
+## שלב 6 — הרחבה עתידית
 - [ ] להתאים Tier לכל פרויקט.
-- [ ] להרחיב רק רכיבים שהוכחו בפיילוט.
-- [ ] להגדיר ביקורת memory/tools חודשית.
+- [ ] לבנות `math-rtl-verify` רק לאחר ראיות חוזרות.
+- [ ] לשקול Hook קטן רק לאחר ש־permissions אינן מספיקות.
+- [ ] לחבר MCP רק לחיבור שחוסך עבודה ידנית חוזרת.
+- [ ] להגדיר audit חודשי read-only לרכיבים שלא היו בשימוש.
 - [ ] להפיק דוח שיפור לאחר חודש שימוש.
 
+## שערים שאסור לדלג עליהם
+- אין התקנת bundle גדול לפני פיילוט צר.
+- אין Agent Teams כברירת מחדל.
+- אין Plugin קהילתי בלי source review ו־SHA.
+- אין Skill עם side effects בהפעלה אוטומטית.
+- אין טענת חיסכון בלי מדידה.
+- אין merge ל־`misparim#1` לפני baseline, review ודיווח.
+
 ## מסמכי שליטה
+- כללים: `CLAUDE.md`.
 - מצב חי: `CURRENT_STATE.md`.
-- ביקורת עדכנית: `docs/REPOSITORY_AUDIT_2026-07-15.md`.
-- checklist תפעולי: Issue #12.
-- מועמד שינוי: `yanivmizrachiy/misparim#1`.
+- מחקר רשמי: `docs/OFFICIAL_CLAUDE_CODE_FINDINGS.md`.
+- מועמדי הרחבות: `research/EXTENSION_CANDIDATES.md`.
+- פיילוט: `docs/PILOT_MISPARIM_READINESS.md` ו־Issue #12.
