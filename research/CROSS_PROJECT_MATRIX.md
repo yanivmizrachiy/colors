@@ -1,59 +1,65 @@
-# מטריצת דפוסים חוצי־פרויקטים
+# מטריצת דפוסים חוצי־פרויקטים — גרסה 1
 
-## מטרה
-להשוות דפוסים שחוזרים בכמה ריפוים, בלי להסיק מסקנה כללית מדוגמה בודדת. כל תא הוא מצב מחקרי זמני, לא החלטה סופית.
+עודכן: 2026-07-14
 
-## מטריצה מעודכנת
-| נושא | mathmath | misparim | maagar | microsoft-forms | parabula-next | www | bbb | ודאות |
-|---|---|---|---|---|---|---|---|---|
-| שער כניסה קצר | כן, 28 שורות | כן | כן | חלקית | לא, כ־260 שורות | כן | חלקית | B |
-| מקור כללים יחיד | CLAUDE | מדורג | RULES | CLAUDE | CLAUDE נאכף | PROJECT_RULES | לפי תת־פרויקט | B |
-| מצב נוכחי נפרד | לא ברור | כן | מעורב | חלקי | נגזר בזמן אמת | מעורב | לא ברור | C |
-| agents/commands רזים | לא נבדק | לא נבדק | לא נבדק | לא נבדק | כן, נאכף | לא נבדק | לא נבדק | B |
-| בדיקות חובה בסיום | type/lint/test/build | לפי פרוטוקול | כן | כן | suites תחומיים רחבים | כן | דורש בדיקה | B |
-| בדיקות סביבת פריסה | Vercel preview, חלקי | לא נבדק | לא נבדק | לא נבדק | GitHub Actions production build + browser | לא נבדק | לא נבדק | B |
-| preview אוטומטי | Vercel PR preview | לא נבדק | לא נבדק | לא נבדק | launch autoPort + Pages | לא נבדק | לא נבדק | B |
-| guards במקום טקסט | חלקית | חלקית | חזק | חלקית | חזק מאוד | חלקית | לא נבדק | B |
-| עצמאות גבוהה ל-Claude | כן | בינונית | בינונית | גבוהה מאוד | גבוהה | בינונית | לא ברור | C |
-| עבודה בענף ו-PR | כן | דורש אימות | דורש אימות | דורש אימות | כן | דורש אימות | דורש אימות | B |
-| תיקוני המשך אחרי merge | רבים | טרם נותח | טרם נותח | טרם נותח | רצף mobile hardening | טרם נותח | טרם נותח | B |
-| PRs גדולים | פיצ'ר רחב אחד | טרם נותח | טרם נותח | טרם נותח | 63–82 commits | טרם נותח | טרם נותח | B |
-| CI כבד/כפול | לא נמצא CI מלא | טרם נותח | טרם נותח | טרם נותח | 10 builds + guard | טרם נותח | טרם נותח | B |
+## השוואת המודלים
+| נושא | mathmath | parabula-next | misparim | maagar | microsoft-forms | www | bbb |
+|---|---|---|---|---|---|---|---|
+| זיכרון פתיחה | קצר | ארוך | קצר + כמה קבצים חובה | שער קצר + RULES | עשיר | שער קצר + אמת כבדה | מקומי לפי subproject |
+| אכיפה | בינונית | גבוהה מאוד | בעיקר טקסט | גבוהה | בעיקר acceptance plan | audits/gates רבים | לא נבדק מספיק |
+| CI/בדיקות | מקומי + preview | מטריצה רחבה | tsc/build/visual | validators + browser QA | acceptance מתוכנן | checks/audits רבים | לא נבדק |
+| state/history | קל | נגזר בזמן אמת | state והיסטוריה מעורבים | נוקה לאחר הצטברות | מסמכי מחקר | STATE רב | לא ידוע |
+| אוטונומיה | גבוהה | גבוהה | בינונית | בינונית | גבוהה מאוד | מבוקרת/רגישה | לא ידוע |
+| סיכון מרכזי | runtime gaps | context/CI cost | כפילות טעינה | stale tooling | overplanning | documentation overload | conflict בין שכבות |
 
 ## דפוסים מבוססים
-### P-001 — שער קצר מפחית context, אך אינו מבטיח כיסוי תפעולי
-`mathmath` משתמש ב־CLAUDE קצר ונוח, אך תקלות browser/provider/Vercel לא נתפסו. `parabula-next` משתמש בחוזה ארוך יותר ומכסה יותר שכבות. המסקנה: אורך הזיכרון אינו מדד יחיד; צריך למדוד מה נאכף ומה נבדק. ודאות: B.
+### P-001 — זיכרון קצר לבדו אינו מספיק
+`mathmath` מראה context יעיל אך פערי runtime; `parabula-next` מראה אכיפה חזקה במחיר context/CI. הפתרון אינו “קצר” או “ארוך”, אלא זיכרון קצר + contracts לפי domain + בדיקות מדורגות.
 
-### P-002 — בדיקות מקומיות אינן תחליף לבדיקות סביבת הפריסה
-ב־`mathmath` typecheck/lint/tests/build עברו למרות תקלות Vercel. ב־`parabula-next` browser gates רצים מול production build ב־CI. המסקנה: פרויקטים תלויי runtime צריכים contract סביבתי מפורש. ודאות: B.
+### P-002 — כללים דטרמיניסטיים עוברים לקוד
+`maagar` ו־`parabula-next` מוכיחים ש-hash checks, duplicate guards, forbidden states ו-browser contracts אמינים יותר מטקסט חוזר.
 
-### P-003 — כללים דטרמיניסטיים עדיף להפוך לבדיקה
-`maagar`, `mathmath` ו־`parabula-next` מציגים ערך כאשר כלל מוצר נאכף בטסט או guard. ב־`parabula-next` אפילו ממשל מקורות ההוראה נאכף בסקריפט. ודאות: B.
+### P-003 — state נוכחי, דרישות והיסטוריה חייבים להיות נפרדים
+`misparim`, `www` וגרסאות מוקדמות של `maagar` מערבבים שכבות. התוצאה היא context מיותר וקושי לדעת מה עדיין נכון.
 
-### P-004 — שכבת AI רחבה עלולה להפוך לחוב תחזוקתי
-`parabula-next` הוסיף commands/agents רבים ב־PRs נפרדים, ובהמשך איחד וצמצם אותם ל־pointers דקים. זוהי ראיה ישירה לכך שלא כל abstraction עוזר לאורך זמן. ודאות: A לפרויקט; C כחוצה־פרויקטים עד שייבדק ריפו נוסף.
+### P-004 — PASS אינו READY
+`www` מפריד היטב implemented/tests/live/release. זה נדרש גם ב־`mathmath` ובפרויקטי אינטגרציה אחרים.
 
-### P-005 — כל רגרסיה שהופכת לבדיקה משפרת אמינות אך עלולה לנפח CI
-`parabula-next` הפך mobile regressions למטריצת browser/interactions/all-pages. הכיסוי התחזק, אך workflow אחד מבצע 10 builds בכל PR. נדרש תכנון execution חכם ולא רק הוספת gates. ודאות: B.
+### P-005 — שכבת AI רחבה היא חוב עד שיוכח אחרת
+`parabula-next` התרחב ל־commands/agents ואז צמצם ל־pointers. Skills, Hooks ו־Agents נבנים רק עבור workflow חוזר ומדיד.
 
-### P-006 — פיצ'ר או hardening רחב ב־PR ענק מקשה על review ו־rollback
-`mathmath` ריכז פיצ'ר מורים רחב ב־PR אחד; `parabula-next` השתמש ב־PRs של 63–82 commits. בשני המקרים נצפו סבבי המשך. עדיין נדרש מידע sessions כדי לקבוע סיבתיות. ודאות: B.
+### P-006 — מחקר ואוטונומיה דורשים checkpoints
+`microsoft-forms` מראה ערך רב למחקר/acceptance מראש, אך אינטגרציה חיצונית חייבת feasibility test קטן לפני implementation רחב.
 
-### P-007 — state היסטורי צריך להיות מחוץ לזיכרון הקבוע
-`parabula-next` הסיר state ידני וספירות קשיחות; `misparim` שומר state נפרד. הכיוון המשותף: מצב משתנה נפרד מכללי עבודה קבועים. ודאות: B.
+### P-007 — audits ותיעוד יכולים להפוך לעומס
+`www`, `maagar` ו־`parabula-next` נאלצו לנקות reports או state ישנים. audit output זמני צריך להיות artifact או archive.
 
-### P-008 — דוחות audit זמניים עדיף לשמור כ־artifacts
-ב־`parabula-next` PR audit של 103 קבצים נסגר והוחלף ב־artifact-only. זהו דפוס חזק למניעת רעש והיסטוריה מיותרת. ודאות: A לפרויקט; C כחוצה־פרויקטים.
+### P-008 — PR גדול מגדיל סיכון תיקוני המשך
+`mathmath` ו־`parabula-next` מציגים פיצ'רים/PRs רחבים ואחריהם hardening. שינוי גדול צריך slicing ו־checkpoint, לא רק יותר tests בסוף.
 
-## שאלות השוואה פתוחות
-1. כמה tokens/context עולה CLAUDE קצר מול ארוך בפועל?
-2. כמה failures ייחודיים מגלה כל gate ב־`parabula-next`?
-3. האם CI כבד מפחית תיקוני המשך ביחס ל־`mathmath`?
-4. האם path-scoped rules יכולים לשמור אמינות בלי להחזיר כפילות?
-5. כמה PRs גדולים נוצרו מסשן ארוך, agent teams או עבודה מקבילית?
+### P-009 — הוראות מקומיות מתאימות לריפו רב־שכבתי
+`bbb` ו־`misparim/zaviyot` מחזקים root קצר + rules/CLAUDE מקומיים לפי subproject.
 
-## כללי עדכון
-1. דפוס ייחשב חוצה־פרויקטים רק לאחר שנצפה בשני ריפוים לפחות.
-2. יש להפריד בין דפוס משתמש, דפוס Claude ודפוס תשתית.
-3. כל שורה תעודכן כאשר יושלם דוח עומק לריפו נוסף.
-4. אין להפוך דפוס לאוטומציה לפני בדיקת תדירות, עלות, סיכון ומדד הצלחה.
+### P-010 — dry-run הוא ברירת מחדל לפעולה רחבה
+`maagar` הוא המודל המוביל: preview, hashes, duplicate detection, apply מפורש ו־validation.
+
+## החלטות תכנוניות
+1. Sonnet כברירת מחדל; Opus רק לסיכון/ארכיטקטורה/שורש.
+2. `CLAUDE.md` מתחת ל־200 שורות, יעד מעשי 80–150.
+3. `CURRENT_STATE.md` עד 30–60 שורות.
+4. path rules לחוזי domain.
+5. אין super-prompt לפתיחת session רגיל.
+6. Subagent רק לפלט רועש ומבודד.
+7. Agent teams אינם ברירת מחדל.
+8. MCP מותקן רק אם מחליף עבודה ידנית אמיתית.
+9. Hook רק לחסימה דטרמיניסטית קריטית.
+10. Skill רק לאחר שלוש חזרות של אותו workflow.
+
+## שאלות שדורשות מדידה בפיילוט
+- כמה context נחסך ב־`misparim` לאחר מעבר ל-path rules?
+- האם מספר הרגרסיות נשאר קבוע או יורד?
+- כמה שימוש מיוחס ל-MCP/Skills/Subagents ב־`/usage`?
+- האם PR workflow בכל פרויקט משמעותי מוסיף זמן סביר ביחס לבטיחות?
+
+## מקור התוכנית
+ההמלצות המלאות: `docs/PERSONAL_WORK_SYSTEM_PLAN.md`.
