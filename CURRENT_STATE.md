@@ -1,63 +1,60 @@
-# מצב נוכחי
+# מצב נוכחי — קלוטקורד
 
 עודכן: 2026-07-15
 
-## תשתית
-- ריפו העבודה המרכזי: `yanivmizrachiy/colors`.
+## זהות ותשתית
+- שם המיזם: **קלוטקורד**.
+- כתובת הריפו הנוכחית: `yanivmizrachiy/colors`.
 - ענף הפעילות הראשי: `main`.
 - התוכן המקורי של `colors` נשמר בענף `archive/colors-original-2026-07-14`.
 - הריפו ציבורי; אין לשמור בו מידע אישי, secrets או נתוני תלמידים.
-- שם הריפו עדיין `colors`; שינוי שם ו־Visibility דורשים פעולה דרך ממשק GitHub או כלי מתאים.
+- Rename של ה־slug ל־`klotkord` ושינוי Visibility דורשים פעולה דרך הגדרות GitHub או כלי מתאים.
 
-## מצב המיזם
-- המחקר והתוכנית האישית לגרסה 1 הושלמו.
-- חבילת הפיילוט המדידה הושלמה.
-- פיילוט הזיכרון ב־`misparim` עבר משלב תכנון לשלב **מועמד שינוי מוכן**.
-- אין הפעלה אוטומטית של Claude Code ואין צריכת מכסת Claude מהפעולות המתבצעות דרך GitHub כאן.
+## מבנה הכללים והידע
+- `CLAUDE.md` הוא דף הכללים המחייב היחיד.
+- `CURRENT_STATE.md` הוא מקור המצב החי.
+- `DECISIONS.md` הוא היסטוריית החלטות בלבד.
+- `docs/` ו־`research/` הם מחקר, ראיות ותוכניות בלבד.
+- פרומפט ההפעלה הישן של מחשב הסלון הוסר.
+- מסמך כללי אבטחה כפול הוסר לאחר ריכוז החובות ב־`CLAUDE.md`.
 
-## מצב `misparim` בפועל
-- `misparim/main` עדיין ללא שינוי ונשאר בסיס ה־baseline ב־SHA `ce020c8fcf026f0ba1909f5844a49ab7ac0aafe3`.
-- נוצר ענף `pilot/claude-memory-v1`.
-- נפתח PR `yanivmizrachiy/misparim#1`.
-- מועמד השינוי נמצא ב־SHA `4c03a1cc02ebe72856a320ec7d71092e62d38bec`.
-- ה־PR פתוח, ניתן למיזוג ו־Vercel עבר בהצלחה.
-- 11 קבצים השתנו, כולם זיכרון/Markdown בלבד; אין שינוי בקוד מוצר, בתוכן מתמטי, ב־DB או ב־assets.
-- ה־PR **לא מוזג**.
-
-## מה נבנה בריפו המרכזי
+## מה הושלם בקלוטקורד
 - דוחות מחקר על שבעה ריפוים.
-- מחקר רשמי על Memory, Rules, Hooks, Subagents, MCP, מודלים ועלויות.
-- תוכנית עבודה אישית מלאה ומדריך יומי.
-- תבנית task brief קצרה.
-- תבנית מדידה למשימות baseline והשוואה.
-- חבילת פיילוט, תנאי הצלחה, תנאי עצירה ו־rollback.
-- סדר עדיפויות ליישום עתידי.
-- ביקורת עומק עדכנית: `docs/REPOSITORY_AUDIT_2026-07-15.md`.
+- תוכנית עבודה אישית גרסה 1 ומדריך יומי.
+- חבילת פיילוט מדידה ל־`misparim`.
+- תבנית task brief ותבנית session measurement.
+- מחקר רשמי מעודכן על Memory, Rules, Skills, Hooks, Subagents, Agent Teams, MCP, Plugins, permissions, sandbox, checkpoints, scheduled tasks, context ועלויות.
+- רשם מועמדי הרחבות מותאם לעבודה של יניב: `research/EXTENSION_CANDIDATES.md`.
+- דף כללים יחיד ומקצועי בשם קלוטקורד.
 
-## ההחלטה התכנונית המרכזית
-1. זיכרון גלובלי קצר מאוד.
-2. `CLAUDE.md` קצר לכל פרויקט.
-3. `CURRENT_STATE.md` חי וקצר.
-4. path rules רק לפי domain.
-5. בדיקות דטרמיניסטיות במקום חזרות בטקסט.
-6. Sonnet כברירת מחדל; Opus לזמן מוגבל במשימות מורכבות/מסוכנות.
-7. Skill או Hook רק לאחר צורך חוזר ומדידה.
-8. PASS טכני נפרד מ־live verified ומ־release ready.
+## מצב `misparim`
+- `misparim/main` נשאר בסיס baseline ב־SHA `ce020c8fcf026f0ba1909f5844a49ab7ac0aafe3`.
+- מועמד שינוי: `pilot/claude-memory-v1` ב־SHA `4c03a1cc02ebe72856a320ec7d71092e62d38bec`.
+- PR: `yanivmizrachiy/misparim#1`.
+- ה־PR פתוח, mergeable ו־Vercel success.
+- 11 קובצי זיכרון/Markdown בלבד השתנו; אין שינוי קוד מוצר.
+- ה־PR לא מוזג.
 
-## מצב הניסוי
-מועמד השינוי הוכן לפני מדידות ה־baseline, אך הניסוי עדיין תקף משום ש־`misparim/main` לא השתנה. המדידה תתבצע כך:
-- שלוש משימות baseline על ה־SHA הישן וב־sessions חדשים.
-- אין מיזוג של PR #1 לפני השלמת baseline.
-- לאחר baseline: review של PR #1 והחלטת merge.
-- לאחר merge, אם יאושר: שלוש משימות post-change דומות.
-- השוואת זמן, `/usage`/context, קבצים שנקראו, תיקונים, רגרסיות ומעורבות יניב.
+## מסקנות ביניים על הרחבות
+- TypeScript LSP רשמי הוא מועמד בעדיפות גבוהה לפיילוט.
+- Permissions מצומצמות קודמות ל־Hook כאשר הן מספיקות.
+- Skills ראשונים אפשריים: `safe-change`, `ui-verify`, `repo-audit`, `handoff`.
+- Subagent מתאים למחקר read-only ורועש.
+- Agent Teams אינם ברירת מחדל בגלל עלות ותיאום.
+- MCP נשמר רק לחיבור שמחליף עבודה ידנית חוזרת; `gh` CLI מועדף כאשר הוא מספיק.
+- אין התקנת Skill pack או Plugin קהילתי לפני review של source, SHA, הרשאות, context ו־rollback.
 
 ## מה עדיין חסר
-- שלוש מדידות baseline אמיתיות.
-- inventory מקומי מצומצם ובטוח של גרסת Claude Code והכלים המותקנים.
-- שלוש מדידות post-change, רק לאחר החלטה על merge.
-- החלטת keep / adjust / revert.
-- החלטה עתידית האם לשנות שם ו־Visibility של הריפו.
+- שלוש מדידות baseline אמיתיות ב־`misparim`.
+- inventory מקומי מסונן: גרסת Claude Code ושמות Skills, Plugins, Hooks, MCP ו־settings פעילים.
+- אימות שם ה־Plugin הרשמי המדויק ל־TypeScript LSP ופיילוט בפרויקט אחד.
+- בחירת Skill ראשון לפי חיכוך שנמדד בפועל.
+- שלוש מדידות post-change לאחר החלטת merge.
+- תוכנית עבודה סופית גרסה 2 לאחר השלמת המחקר והמדידות.
+- Rename של הריפו ל־`klotkord` דרך GitHub.
 
 ## הצעד הבא
-Issue #12 הוא מסלול הביצוע הפעיל. מתחילים משלוש משימות baseline על `misparim/main`; PR #1 נשאר פתוח ולא ממוזג עד לסיום המדידה והדיווח.
+1. להשלים ביקורת diff של ניקוי קלוטקורד ולמזג אותה.
+2. לבצע inventory מקומי בטוח וקצר.
+3. לבחור שלוש משימות baseline אמיתיות.
+4. רק לאחר המדידות לבחור פיילוט הרחבה אחד.
