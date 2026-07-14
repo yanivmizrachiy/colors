@@ -1,0 +1,25 @@
+# Local and sensitive data
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials*
+secrets*
+
+# Claude Code local/application data
+.claude/.credentials.json
+.claude/projects/
+.claude/history.jsonl
+.claude/stats-cache.json
+.claude/debug/
+.claude/file-history/
+.claude/session-env/
+.claude/shell-snapshots/
+
+# Audit outputs
+*.zip
+private-audit/
+raw-sessions/
