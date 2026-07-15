@@ -1,327 +1,639 @@
-# תוכנית מערכת העבודה האישית של יניב עם Claude Code — גרסה 1
+# תוכנית העבודה האישית של יניב עם Claude Code — קלוטקורד גרסה 2
 
-עודכן: 2026-07-14
+עודכן: 2026-07-15
 
-## סטטוס
-זו תוכנית עבודה מעשית המבוססת על התיעוד הרשמי ועל המחקר ב־`mathmath`, `parabula-next`, `misparim`, `maagar`, `microsoft-forms`, `www` ו־`bbb`.
+> מסמך הביצוע המרכזי של קלוטקורד. הוא אינו דף כללים; מקור הכללים המחייב היחיד הוא `CLAUDE.md`.
 
-היא עדיין **תוכנית בלבד**: אין ליישם רכיבים בפרויקטים אחרים לפני אישור יניב ופיילוט מבוקר.
+## 1. מטרת התוכנית
+לאפשר ליניב לתת הוראות קצרות ולקבל עבודה אמיתית, מדויקת, בדוקה ובטוחה—תוך שמירת הדרישות שלו לאורך זמן, הפחתת הסברים חוזרים, צמצום context וטוקנים, ושימוש חכם ב־Skills, Hooks, Plugins, Subagents, Git, CI ו־preview.
 
-## 1. המטרה
-לאפשר ליניב לתת הוראה קצרה ולקבל תוצאה אמיתית, בדוקה ובטוחה, עם מינימום הסברים חוזרים ומינימום שימוש מיותר בטוקנים — בלי לאבד שליטה על Git, פריסה, מידע רגיש או תוכן לימודי.
+היעד אינו “מקסימום אוטומציה”. היעד הוא:
+- מינימום מאמץ ידני מצד יניב.
+- מינימום context שאינו נחוץ.
+- מקסימום שמירה על דרישות וחוזי מוצר.
+- מקסימום יכולת לבדוק, להבין ולהחזיר לאחור כל שינוי.
 
-## 2. המסקנה המרכזית
-אין להעתיק מודל אחד לכל הריפוים:
-- `mathmath` מוכיח ששער קצר ומהירות טובים, אך נדרשות בדיקות סביבת פריסה.
-- `parabula-next` מוכיח שאכיפה ו־CI חזקים מונעים רגרסיות, אך context ו־compute עלולים להתנפח.
-- `misparim` מוכיח שהפרדה בין שכבות מועילה, אך סדר קריאה קבוע יכול ליצור כפילות.
-- `maagar` מוכיח שכלל דטרמיניסטי עדיף כ־test/guard עם dry-run.
-- `microsoft-forms` מוכיח שמחקר, facts ו־acceptance tests לפני קוד מאפשרים אוטונומיה.
-- `www` מוכיח את ערך ה־truth gates, אך גם את הסיכון של הצטברות STATE ו־audits.
-- `bbb` מוכיח שהוראות מקומיות לפי תת־פרויקט מתאימות לריפו רב־שכבתי.
+## 2. על מה התוכנית מבוססת
+התוכנית מבוססת על מחקר עומק של ריפו הליבה:
+- `ma-assistant2` ו־`server-core` — שליטה במכשירים, הרשאות, runtime ואבטחה.
+- `mathmath` — פיתוח מהיר, PRs, Vercel ותיקוני runtime.
+- `misparim` — זיכרון מדורג ושני מוצרים באותו ריפו.
+- `parabula-next` — A4, mobile, PWA, CI ו־Agents.
+- `maagar` — ingestion, PDF/DOCX, hashes, dry-run ו־browser QA.
+- `www` — Moodle, DB, LTI, תלמידים ו־truth gates.
+- `TALMID` — פרטיות, roles, DB ודרישות שמשתנות בזמן אמת.
+- `targilim` — מקורות אמת, verifiers ו־CI עמוק.
+- `microsoft-forms` — מחקר, facts, acceptance tests ואוטונומיה.
 
-לכן המודל הנבחר הוא **ליבה משותפת קטנה + התאמה לפי סיכון ותחום**.
+פרויקטים נוספים שימשו רק כראיות נקודתיות ל־PowerShell, מכשירים, PDF, scheduled automation, state drift ו־AI Studio/Lovable.
 
-## 3. מבנה הזיכרון המומלץ
-### 3.1 זיכרון משתמש גלובלי — קצר מאוד
-מטרתו לשמור רק העדפות שחוזרות בכל פרויקט:
+## 3. המסקנה המרכזית
+אין פתרון אחד שמתאים לכל הפרויקטים, אבל יש ליבה משותפת אחת:
+
+1. דף כללים קצר וברור.
+2. מצב חי קצר ונפרד.
+3. דרישות מוצר קנוניות לפי תחום.
+4. ראיות ובדיקות במקום טענות טקסטואליות.
+5. זיכרון חדש נכנס רק לאחר סיווג ואישור.
+6. משימה אחת משמעותית בכל session.
+7. Skill אחד בכל פיילוט—not חבילת Skills.
+8. Permissions לפני Hooks כאשר אפשר.
+9. PR, preview ו־rollback לפי רמת הסיכון.
+10. מדידה לפני טענה לחיסכון.
+
+## 4. ארכיטקטורת הזיכרון האישית
+
+### 4.1 זיכרון גלובלי של יניב
+יכיל רק העדפות שחוצות פרויקטים:
 - תקשורת בעברית.
-- GitHub הוא מקור האמת.
-- לא לעבוד בריפו הלא נכון.
-- לא להמציא נתונים או תוכן לימודי.
-- לא לחשוף secrets או מידע תלמידים.
-- שינוי ממוקד; לא refactor בלי צורך.
-- סיום עם בדיקות ודיווח ברור.
+- עבודה אמיתית בלבד.
+- אין המצאת תוכן, נתונים או הצלחה.
+- GitHub הוא מקור האמת לקוד.
+- שינוי ממוקד בלבד.
+- דרישה אחרונה מאושרת מחליפה דרישה קודמת.
+- אין secrets או נתוני תלמידים בזיכרון ציבורי.
+- בדיקה חזותית נדרשת למתמטיקה, RTL, A4, PDF ו־UI.
 
-יעד: 20–40 שורות, ללא פרטי פרויקט, ללא היסטוריה וללא רשימות tools.
+יעד: 20–40 שורות בלבד.
 
-### 3.2 `CLAUDE.md` לכל פרויקט
-יעד: עד 80–150 שורות ובכל מקרה פחות מ־200.
+הזיכרון הגלובלי המלא צריך להיות פרטי. קלוטקורד הציבורי ישמור רק schema, תהליך וכללים כלליים—not פרטים אישיים או דרישות רגישות.
 
-הוא יכיל רק:
-1. זהות ומטרת המוצר.
-2. גבול הריפו והענף.
-3. מקורות האמת.
-4. פקודות build/test/preview.
-5. 5–10 כללי בטיחות קריטיים.
-6. הגדרת השלמה.
-7. הפניות למסמכים/rules לפי צורך.
-
-אסור להכניס אליו:
-- היסטוריית משימות.
-- מפות תוכן ארוכות.
-- רשימות ספירות משתנות.
-- tutorial מלא.
-- כללים שרלוונטיים רק לתיקייה אחת.
-
-### 3.3 `CURRENT_STATE.md`
-יעד: 30–60 שורות.
+### 4.2 `CLAUDE.md` בפרויקט
+יעד מומלץ: 80–150 שורות, ובכל מקרה פחות מ־200 ככל האפשר.
 
 יכיל רק:
-- מה פעיל עכשיו.
-- מה חסום.
-- PR/branch נוכחי.
+1. זהות המוצר והריפו הקנוני.
+2. גבולות שינוי.
+3. מקורות אמת.
+4. פקודות build/test/preview.
+5. חוזי בטיחות קריטיים.
+6. הגדרת done.
+7. הפניות למסמכים או Rules לפי צורך.
+
+לא יכיל:
+- changelog.
+- רשימת “בוצע”.
+- state זמני.
+- snapshots של חשבון, חומרה או אחוזי מוכנות.
+- כל מפת המוצר.
+- tutorial מלא.
+- אותה דרישה בכמה ניסוחים.
+
+### 4.3 `CURRENT_STATE.md`
+יכיל רק:
+- branch/PR פעיל.
+- מה עובד ומה חסום.
 - סיכונים פתוחים.
+- מה אומת חי ומה לא.
 - 3–7 צעדים הבאים.
+- תאריך ומקור ראיה.
 
-לא יכיל ארכיטקטורה מלאה או היסטוריה.
+יעד: 30–60 שורות.
 
-### 3.4 Rules לפי path
-חוזים תחומיים ייטענו רק כשנוגעים בקבצים מתאימים:
+### 4.4 דרישות מוצר
+מסמך קנוני אחד לכל concern או data/schema קנוני.
+
+דוגמאות:
+- תוכן לימודי ומפת שאלות.
+- חוזי RTL ומתמטיקה.
+- DB/schema.
+- הרשאות ו־roles.
+- integration contracts.
+- A4/PDF/print.
+
+מידע דטרמיניסטי עובר ל־test, verifier, schema או guard במקום להישאר רק בטקסט.
+
+### 4.5 Rules לפי path
+רק כאשר יש domains אמיתיים:
 - UI/CSS.
-- מתמטיקה ו־RTL.
-- A4/print/PDF.
-- DB/API/security.
+- math/RTL.
+- print/A4/PDF.
+- DB/auth/security.
 - Moodle/LTI.
 - subproject עצמאי.
 
-### 3.5 מסמכי מוצר כבדים
-מפות שקופיות, דרישות דידקטיות, schemas, API maps והיסטוריה נשמרים ב־`docs/` ונקראים רק כאשר המשימה דורשת.
+Rule אינו משכפל workflow גלובלי ואינו מחזיק state.
 
-### 3.6 Auto memory
-מותר לשמור בו:
+### 4.6 Auto Memory
+מותר:
 - פקודת debug שהתגלתה.
-- preference חוזרת.
-- מלכודת ארכיטקטונית שקשה לגלות.
+- gotcha טכנית שקשה לגלות.
+- preference חוזרת שאושרה.
+- נתיב או כלי מקומי שאינו רגיש.
 
-אין לשמור בו:
+אסור:
 - state זמני.
-- קוד או לוגים גדולים.
-- מידע רגיש.
+- secrets.
 - רשימת משימות.
+- logs גדולים.
+- מידע תלמידים.
+- החלטה שסותרת את Git.
 
-ביקורת עם `/memory` אחת לשבועיים בפרויקט פעיל.
+ביקורת `/memory` אחת לשבועיים בפרויקט פעיל.
 
-## 4. סיווג משימה לפני עבודה
-### קטנה
-דוגמה: ניסוח, CSS נקודתי, תיקון טקסט או bug מקומי.
-- Sonnet.
-- effort רגיל.
-- ללא subagent.
-- חיפוש ממוקד → שינוי → בדיקה → commit/PR.
+## 5. כיצד Claude לומד דרישה חדשה
 
-### בינונית
-דוגמה: רכיב, זרימת טופס, שינוי בכמה קבצים או integration מוגבל.
-- Sonnet, effort גבוה.
-- תוכנית קצרה עם קריטריוני קבלה.
-- preview/tests לפני merge.
-- subagent רק אם יש מחקר צדדי רועש.
+### שלב 1 — זיהוי
+Claude מזהה שהמשפט של יניב עשוי להיות דרישה עמידה, למשל:
+- “תמיד הסימן לפני המספר”.
+- “אין merge בלי preview”.
+- “כפתור זה לא יופיע”.
+- “המקור הזה בלבד מאושר”.
 
-### גדולה/מסוכנת
-דוגמה: auth, DB migration, Moodle/LTI, storage, deployment, refactor רחב או פיצ'ר רב־שכבתי.
-- Opus לתכנון וניתוח שורש בלבד.
-- פיצול לשלבים ו־checkpoints.
-- Sonnet לביצוע שלבים ברורים כאשר אפשר.
-- draft PR.
-- בדיקות environment/live מפורשות.
-- אין merge לפני evidence ו־rollback.
+### שלב 2 — סיווג
+הדרישה מסווגת כאחת מאלה:
+- העדפה גלובלית.
+- כלל פרויקט.
+- חוזה מוצר.
+- החלטה ארכיטקטונית.
+- state זמני.
+- משימה פתוחה.
+- מידע רגיש שאסור לשמור.
 
-## 5. פתיחת משימה — הנוסח המומלץ
-במקום super-prompt ארוך, יש לתת בקשה קצרה ומובנית:
+### שלב 3 — חיפוש כפילות וסתירה
+לפני כתיבה Claude מחפש:
+- ניסוח זהה.
+- ניסוח דומה.
+- כלל קודם שסותר.
+- test/guard שכבר מיישם את הדרישה.
+- פרויקט אחר שאינו אמור לקבל את הדרישה.
 
+### שלב 4 — הצעה ליניב
+Claude מציג בקצרה:
+- הניסוח הקנוני המוצע.
+- הסיווג.
+- ה־scope.
+- מה הוא מחליף.
+- היכן יישמר.
+- האם נדרש test/Skill/Hook.
+
+### שלב 5 — אישור
+רק לאחר אישור יניב הדרישה נכתבת.
+
+### שלב 6 — עדכון, לא הצטברות
+דרישה חדשה מחליפה או מעדכנת את הישנה. Git שומר היסטוריה; אין צורך לשמור שתי גרסאות פעילות.
+
+### שלב 7 — קישור לאכיפה
+כאשר אפשר, הדרישה מקושרת ל:
+- test.
+- verifier.
+- schema.
+- permission.
+- Rule.
+- Skill.
+- Hook קטן.
+
+## 6. מזהה דרישה ו־provenance
+לכל דרישה חשובה יישמרו, לפי הצורך:
+- `id` יציב.
+- סוג.
+- ניסוח קנוני.
+- scope.
+- מקור: יניב / מסמך / commit / API / test / runtime.
+- תאריך יצירה ועדכון.
+- סטטוס: proposed / approved / verified / superseded / revoked.
+- רמת רגישות.
+- references לקוד, tests ו־docs.
+- מועד review כאשר היא עלולה להתיישן.
+
+אין צורך להפוך כל העדפה קטנה ל־database. מתחילים ב־Markdown מובנה ומוסיפים schema רק אם הנפח והסתירות מצדיקים זאת.
+
+## 7. ארבעה מסלולי עבודה
+
+### Fast Lane — שינוי קטן
+מתאים ל:
+- ניסוח.
+- CSS נקודתי.
+- label.
+- bug מקומי וברור.
+
+תהליך:
+1. אמת repo ו־scope.
+2. חיפוש ממוקד.
+3. שינוי מינימלי.
+4. בדיקה ממוקדת.
+5. diff.
+6. PR קטן או commit לפי מדיניות הפרויקט.
+
+מודל: Sonnet, effort רגיל.
+
+### Standard Lane — שינוי בינוני
+מתאים ל:
+- רכיב חדש.
+- flow.
+- כמה קבצים.
+- integration מוגבל.
+
+תהליך:
+1. Explore.
+2. תוכנית קצרה.
+3. implementation.
+4. tests + preview.
+5. PR עם root cause, scope ו־rollback.
+
+מודל: Sonnet, effort גבוה.
+
+### High-Risk Lane — שינוי מסוכן
+מתאים ל:
+- DB/migrations.
+- auth/permissions.
+- מידע תלמידים.
+- Moodle/LTI.
+- מכשיר, shell, autostart או admin.
+- production/deploy.
+- שינוי רוחבי.
+
+תהליך:
+1. evidence.
+2. threat/risk analysis.
+3. plan ו־rollback.
+4. branch/worktree מבודד.
+5. draft PR.
+6. review עצמאי.
+7. environment/live validation.
+8. merge מפורש בלבד.
+
+מודל: Opus לתכנון/שורש/ביקורת; Sonnet לביצוע שלבים ברורים.
+
+### Research Lane — חקירה בלבד
+מתאים ל:
+- repo audit.
+- CI/logs.
+- OCR/render/artifact.
+- בדיקת קובץ או PR.
+
+ברירת מחדל: read-only. אין PR מוצר רק כדי להפיק artifact אם יש חלופה מקומית.
+
+## 8. תבנית המשימה הקצרה
 ```text
 משימה: [מה בדיוק צריך].
 היקף: [מה מותר לשנות].
 לא לשנות: [אזורים מוגנים].
-הצלחה: [תוצאה נראית/מדידה].
-בדיקות נדרשות: [preview / test / build / live].
-עבוד בענף ופתח PR; אל תמזג לפני דיווח.
+הצלחה: [תוצאה מדידה או נראית].
+בדיקות: [test / build / preview / live].
+Git: עבוד בענף ופתח PR; אל תמזג לפני דיווח.
 ```
 
-Claude יקרא את הוראות הפרויקט אוטומטית. אין לבקש שוב “קרא את כל קובצי הזיכרון”.
+אין להדביק super-prompt ארוך. Claude קורא את הוראות הפרויקט אוטומטית.
 
-## 6. תהליך העבודה המחייב
-### שלב א — Preflight
-- אמת repo, remote, branch ו־working tree.
-- pull/fetch בטוח.
-- סווג גודל וסיכון.
-- קרא רק מקורות אמת רלוונטיים.
+## 9. חיסכון ב־context ובטוקנים
 
-### שלב ב — חקירה
-- Grep/search לפני פתיחת קבצים גדולים.
-- איתור implementation קיים ותקדימים.
-- זיהוי runtime, integrations ו־deployment constraints.
-- ניסוח קריטריוני קבלה לפני קוד.
+### כללי session
+- משימה אחת משמעותית לכל session.
+- `/rename` לפני מעבר.
+- `/clear` בין משימות לא קשורות.
+- `/compact Focus on verified decisions, changed files, open risks, and next steps` כאשר אותה משימה נמשכת.
+- לאחר שני ניסיונות תיקון כושלים: לעצור, לסכם ולפתוח session נקי.
+- להשתמש ב־`/btw` לשאלה קצרה שאינה צריכה להישמר בשיחה.
 
-### שלב ג — תכנון
-- שינוי קטן: תוכנית פנימית קצרה והמשך.
-- שינוי בינוני: תוכנית כתובה של קבצים, סיכונים ובדיקות.
-- שינוי גדול: שלבים עצמאיים, rollback ו־checkpoint בכל שלב.
+### קריאת קבצים
+- Grep/search לפני פתיחת קובץ גדול.
+- טווח שורות רלוונטי במקום קובץ מלא.
+- אין קריאת כל הריפו או כל requirements כברירת מחדל.
+- logs ו־CI ארוכים עוברים ל־Subagent או artifact מסונן.
 
-### שלב ד — ביצוע
-- מינימום קבצים.
-- אין שינויים צדדיים.
-- אין נתוני דמו או placeholders ללא בקשה.
-- commit לפי יחידה הגיונית, לא לפי כל פעולה קטנה.
+### בחירת מודל
+- Sonnet כברירת מחדל.
+- effort רגיל ל־Fast Lane.
+- effort גבוה ל־Standard/debugging.
+- Opus רק לארכיטקטורה, root cause, אבטחה, migration או review מסוכן.
+- Agent קל למשימות מיון/סיכום ללא החלטה מורכבת.
 
-### שלב ה — אימות
-רמת האימות נקבעת לפי הסיכון:
-1. static: typecheck/lint/unit.
-2. build: build production.
-3. interaction: browser/preview.
-4. environment: Vercel/Render/GitHub Pages/serverless constraints.
-5. live: מערכת חיצונית אמיתית כאשר capability תלויה בה.
+### מדידה
+לכל פיילוט:
+- `/usage`.
+- `/context`.
+- זמן עד root cause.
+- זמן עד תוצאה מאומתת.
+- קבצים שנקראו.
+- מספר תיקונים.
+- רגרסיות.
 
-PASS טכני אינו שווה READY. יש לדווח בנפרד:
+## 10. Skills — סדר הבנייה
+לא מתקינים Skill pack. נבנה או מתקין Skill אחד בכל פעם.
+
+### S1 — `capture-requirement`
+מטרה: ללמוד דרישה חדשה בלי ליצור כפילות.
+
+ה־Skill:
+1. מסווג את הדרישה.
+2. מחפש כפילות/סתירה.
+3. מציע ניסוח קנוני ומיקום.
+4. מציג מה יוחלף.
+5. אינו כותב בלי אישור.
+
+הפעלה ידנית בלבד: `disable-model-invocation: true`.
+
+זהו ה־Skill החשוב ביותר עבור יניב.
+
+### S2 — `safe-change`
+מטרה: preflight, scope, tests, diff ו־PR report.
+
+כלים מותרים:
+- Read/Grep/Glob.
+- Git read/status/diff.
+- פקודות בדיקה מאושרות.
+
+אסור:
+- merge.
+- deploy.
+- DB write.
+- force operations.
+
+### S3 — `ui-verify`
+מטרה: preview אמיתי ל־RTL, mobile, A4, PDF, מצגות וגרפיקה.
+
+תוצר:
+- viewports שנבדקו.
+- screenshots.
+- console/network.
+- clipping/overflow.
+- התאמה למקור.
+- מה לא אומת.
+
+### S4 — `repo-audit`
+Subagent/Skill read-only:
+- זהות ריפו.
+- stale docs.
+- open PRs.
+- duplicate sources.
+- permissions.
+- CI noise.
+- risk register.
+
+### S5 — `handoff`
+סיכום מסונן בין sessions/מחשבים:
+- מטרה.
+- מצב.
+- files changed.
+- tests.
+- branch/PR.
+- חסימות.
+- הצעד הבא.
+
+אין transcript גולמי.
+
+### S6 — `ingest-real-files`
+עבור `maagar` ופרויקטי קבצים:
+- inventory.
+- metadata.
+- hashes.
+- dry-run.
+- apply.
+- validate.
+- browser QA.
+
+### S7 — `math-rtl-verify`
+רק לאחר שהצורך הוכח בכמה פרויקטים:
+- סימן לפני מספר.
+- LTR בתוך RTL.
+- שוויון וסדר ביטוי.
+- SVG/גרפים.
+- מקור תוכן.
+- A4/print.
+
+## 11. תנאי יצירת Skill
+Skill נוצר רק כאשר מתקיים לפחות אחד:
+- workflow חזר שלוש פעמים.
+- עלות הטעות גבוהה במיוחד.
+- התהליך רב־שלבי וקשה לזכור.
+- הוא חוסך context קבוע משמעותי.
+
+לפני יצירה מתעדים:
+- הבעיה.
+- התדירות.
+- חלופה פשוטה יותר.
+- tools והרשאות.
+- context cost.
+- מדד הצלחה.
+- rollback.
+
+## 12. Permissions, Hooks ו־Sandbox
+
+### Permissions ראשונות
+**Deny:**
+- `.env`, credentials, tokens, cookies, SSH/private keys.
+- force push.
+- `reset --hard`.
+- `git clean`.
+- מחיקה רחבה.
+- כתיבה מחוץ ל־root.
+
+**Allow:**
+- `git status`, `git diff`, `git log`.
+- tests/typecheck/build ידועים.
+- קריאת קוד ומסמכים לא־רגישים.
+
+**Ask:**
+- push.
+- merge.
+- deploy.
+- DB migration/write.
+- auth/permissions.
+- system/admin/device actions.
+
+יש להסיר הרשאות project-local רחבות כמו `gh pr merge:*` כאשר הן אינן מוצדקות.
+
+### Hooks
+Hook נבנה רק אם permission או test אינם מספיקים.
+
+מועמדים:
+1. חסימת force/destructive commands.
+2. חסימת secrets ונתוני תלמידים.
+3. בדיקת branch לפני push.
+
+אין Hook שמריץ build כבד אחרי כל edit.
+
+### Sandbox
+נבדק רק לאחר inventory מקומי. ב־Windows יש לבחון עבודה דרך WSL2 כאשר נדרש גבול OS אמיתי.
+
+## 13. Subagents ו־Agent Teams
+
+### Subagent
+מתאים ל:
+- audit read-only.
+- CI/logs.
+- security review.
+- חיפוש רחב.
+- בדיקה עצמאית של PR.
+
+ברירת מחדל: סוכן אחד, תוצר קצר, בלי edits.
+
+### Agent Teams
+לא ברירת מחדל.
+
+ישמשו רק כאשר:
+- שלוש משימות באמת עצמאיות.
+- אין עריכה באותו קובץ.
+- לכל teammate תוצר ברור.
+- עלות context מוצדקת.
+
+## 14. Git, PR ו־Merge Gates
+
+### שינויים קטנים
+PR קטן, commit אחד או שניים, review של diff ובדיקות ממוקדות.
+
+### שינויים בינוניים
+PR עם:
+- root cause.
+- מה השתנה.
+- מה לא השתנה.
+- tests/preview.
+- rollback.
+
+### שינויים מסוכנים
+- draft PR.
+- reviewer/agent עצמאי.
+- זמן קירור לפני merge.
+- evidence חי.
+- merge מפורש.
+
+### איסורים
+- רצף commits ניסיוניים ישירות ל־`main`.
+- PR של עשרות נושאים לא קשורים.
+- PR מחקרי שנשאר פתוח ללא תאריך תפוגה.
+- merge אוטומטי רק משום שה־build ירוק.
+
+### סטטוסים נפרדים
 - implemented.
 - tests passed.
+- preview/environment verified.
 - live verified.
 - release ready.
 
-### שלב ו — Git ו־PR
-- branch ייעודי.
-- אין push ישיר ל־main בפרויקטים פעילים/מסוכנים.
-- PR מתאר: מה השתנה, למה, מה לא השתנה, בדיקות, חסימות ו־rollback.
-- שינוי מסוכן מתחיל כ־draft.
-- merge רק לאחר checks ו־preview/ראיה נדרשת.
+## 15. התאמה לריפו הליבה
 
-### שלב ז — סיום
-דיווח קצר:
-- מה בוצע.
-- מה נבדק.
-- מה לא אומת.
-- branch/commit/PR.
-- מה נשאר פתוח.
+### `ma-assistant2` — Tier C
+מועמד קנוני למשפחת השליטה.
 
-עדכון memory/state רק כאשר נוצר מידע עמיד לעתיד.
+נדרש:
+- High-Risk Lane לפעולות מכשיר, shell והרשאות.
+- permission profile קשיח.
+- audit ו־evidence מחוץ ל־Git.
+- `CLAUDE.md` קצר יותר עם Rules/Skills לפי תחום.
+- review של כל capability מול manifest, executor ו־test.
 
-## 7. מודלים ו־effort
-### ברירת מחדל
-- Sonnet למשימות קוד שוטפות.
-- effort רגיל למשימה קטנה.
-- effort גבוה למשימה בינונית או debugging מורכב.
+### `server-core` — מועמד legacy/adapter
+נמצאה סתירה בין הצהרת “מוצר יחיד” לבין כלי תחזוקה שמגן גם על `ma-assistant2`.
 
-### Opus
-רק עבור:
-- ארכיטקטורה מורכבת.
-- חקירת שורש לאחר כמה ניסיונות.
-- אבטחה או migration מסוכן.
-- תכנון פיצ'ר רחב.
-- ביקורת של PR בעל סיכון גבוה.
+נדרש לפני החלטה:
+- להכריע אם יש runtime ייחודי שאינו קיים ב־`ma-assistant2`.
+- לבדוק writer ואימות end-to-end לתור הפקודות.
+- לא להציג allowlist כמאומת כאשר `action` מועבר ישירות ל־SSH.
+- לאחר ההכרעה: merge, adapter קצר או legacy pointer.
 
-לא להשאיר Opus כברירת מחדל לכל session.
+### `mathmath` — Tier B/C
+- remove broad merge permission.
+- PR מהיר רק לשינוי קטן.
+- environment/Vercel checks לשינויים תלויי runtime.
+- Skill `ui-verify` מועמד חזק.
 
-### מודל זול/מהיר
-אפשר להשתמש ב־Haiku או agent קל למשימות מיון, איתור קבצים או סיכום לוגים, בתנאי שאין החלטה מורכבת.
+### `misparim` — Tier B ופיילוט זיכרון
+- להשלים baseline לפני merge של PR #1.
+- למדוד Rules לפי path מול זיכרון כבד.
+- אין Skill בפיילוט הראשון.
 
-## 8. ניהול context וטוקנים
-- `/usage` בתחילת שבוע ובסוף משימה גדולה.
-- `/clear` בעת מעבר למשימה שאינה קשורה.
-- `/rename` לפני clear כדי לאפשר resume.
-- `/compact Focus on verified decisions, changed files, open risks, and next steps` כאשר הסשן ארוך אך המשימה נמשכת.
-- אחרי שני סבבי תיקון שלא פתרו את הבעיה: לעצור, לסכם ולפתוח session חדש עם prompt משופר.
-- אין לקרוא ריפו שלם או מסמכי requirements כבדים כברירת מחדל.
-- אין agent teams למחקר רגיל; כל agent נוסף מכפיל context משלו.
+### `parabula-next` — Tier C
+- לשמור Agents דקים.
+- להעביר mobile/A4/PWA לחוקים תחומיים לפי path.
+- למפות CI כדי לצמצם חפיפה בלבד—not להסיר בדיקות ייחודיות.
+- Skill `math-rtl-verify` או `ui-verify` לאחר מדידה.
 
-## 9. Subagents
-### להשתמש כאשר
-- חיפוש רחב ייצור הרבה פלט.
-- צריך לבדוק CI/logs בלי לזהם את השיחה הראשית.
-- נדרשת ביקורת עצמאית לקריאה בלבד.
-- יש כמה מחקרים שאינם תלויים זה בזה.
+### `maagar` — Tier C
+- לשמר dry-run, hashes ו־validators.
+- להפריד artifact/research workflow מ־PR מוצר.
+- Skill `ingest-real-files` מועמד טבעי.
 
-### לא להשתמש כאשר
-- המשימה קטנה.
-- צריך הלוך־חזור תכוף עם יניב.
-- השלבים חולקים אותו context.
-- אין תוצר מוגדר לסוכן.
+### `www` — Tier C רגיש
+- truth gates ו־release readiness נשמרים.
+- state/audits מקבלים lifecycle וסגירה.
+- DB/Moodle/LTI תמיד High-Risk Lane.
+- מידע תלמידים לא נכנס לזיכרון או evidence ציבורי.
 
-ברירת מחדל: עד subagent אחד או שניים, read-only, עם שאלה ממוקדת ותוצר קצר.
+### `TALMID` — Tier C רגיש
+- supersede אמיתי לדרישות משתנות.
+- privacy audit דחוף לכל מידע אמיתי ב־Git.
+- DB migrations ו־roles דורשים draft PR ו־live evidence.
 
-## 10. MCP ו־Plugins
-- להשאיר רק כלים שנעשה בהם שימוש ממשי.
-- GitHub הוא חיבור מרכזי.
-- Browser/preview רק בפרויקטי UI.
-- DB/hosting רק כאשר המשימה דורשת.
-- MCP בעל הרשאות כתיבה: project/local scope ככל האפשר.
-- לא לשמור tokens בריפו.
-- אחת לחודש: `/usage` ובדיקה אילו MCP/Plugins באמת צורכים שימוש.
+### `targilim` — Tier C איכותי
+- לשמר source-of-truth map ו־verifiers.
+- להוציא changelog ו־state מ־RULES.
+- לשמור CI מקומי וחי כאשר כל אחד מגן על סיכון אחר.
 
-## 11. Hooks עתידיים — סדר עדיפות
-אין להפעיל עדיין. בפיילוט מתחילים רק בשניים:
+### `microsoft-forms` — Tier C אינטגרציה
+- facts מקבלים `verified_at` ו־expiry/recheck policy.
+- אין אוטונומיה ארוכה על בסיס snapshot ישן.
+- acceptance tests נשמרים.
+- feasibility/live checkpoint לפני implementation רחב.
 
-### H1 — חסימת ריפו שגוי ופקודות הרסניות
-- חסימת `rm`, `git clean`, `reset --hard`, force push וכתיבה מחוץ ל-root.
-- בקשת אישור ל־push/merge/deploy.
+## 16. סדר היישום
 
-### H2 — הגנת secrets ונתוני תלמידים
-- חסימת Read/Write ל־`.env`, credentials, session exports ונתוני תלמידים גולמיים.
+### שלב 0 — inventory מקומי
+- גרסת Claude Code.
+- user settings.
+- auto memory.
+- Plugins.
+- Skills.
+- Hooks.
+- MCP.
+- permissions.
 
-רק לאחר הצלחת הפיילוט:
-- בדיקת branch לפני commit.
-- הרצת test ממוקד לפי קבצים ששונו.
-- בדיקת diff scope.
+שמות והגדרות מסוננות בלבד; אין secrets או transcripts.
 
-## 12. Skills עתידיים — סדר עדיפות
-אין לבנות כרגע. המועמדים הראשונים:
-1. `safe-change` — preflight, scope, tests ו־PR report.
-2. `ui-verify` — preview, viewports, console/network וסיכום.
-3. `repo-audit` — facts, stale docs, open PRs ו־risk register; read-only.
-4. `ingest-real-files` — dry-run, metadata, hash, apply ו־validate.
-5. `handoff` — סיכום קצר להמשך session/מחשב.
+### שלב 1 — baseline
+שלוש משימות אמיתיות:
+1. שינוי UI קטן.
+2. שינוי קוד בינוני.
+3. audit read-only.
 
-Skill ייבנה רק אם אותו workflow חזר לפחות שלוש פעמים.
+למדוד tokens/context, זמן, קבצים ותיקונים.
 
-## 13. רמות פרויקט
-### Tier A — פרויקט קטן/פשוט
-- CLAUDE קצר.
-- commands.
-- tests בסיסיים.
-- ללא Skills/Hooks מיוחדים.
+### שלב 2 — פיילוט זיכרון `misparim`
+- baseline ישן.
+- review PR #1.
+- merge רק לאחר החלטה.
+- שלוש משימות post-change.
 
-### Tier B — מוצר פעיל עם UI/DB
-- CLAUDE קצר + rules תחומיים.
-- preview ו־CI.
-- Hook בטיחות בסיסי.
-- Skill אחד או שניים לתהליכים חוזרים.
+### שלב 3 — Skill ראשון
+`capture-requirement` או `safe-change`, לפי החיכוך שנמדד.
 
-### Tier C — מערכת רגישה/אינטגרציה
-- truth states.
-- release gates.
-- draft PRs.
-- environment/live tests.
-- permissions/hooks חזקים.
-- evidence נפרד מ-current state.
+### שלב 4 — Plugin TypeScript LSP
+פרויקט אחד בלבד, source רשמי, מדידה ויכולת הסרה.
 
-## 14. תוכנית פיילוט מומלצת
-הפרויקט המתאים ביותר לפיילוט הוא `misparim`:
-- פעיל אך קטן יותר מ־`www`.
-- מכיל בעיית זיכרון ברורה ומדידה.
-- קיימים preview וכללי איכות.
-- rollback פשוט דרך Git.
+### שלב 5 — Skill UI
+`ui-verify` בפרויקט אחד עם RTL/A4/PDF.
 
-### פיילוט עתידי
-1. למדוד `/usage` בשלוש משימות רגילות במצב הנוכחי.
-2. לקצר current state ולהעביר שני domains ל-path rules.
-3. לא להוסיף Skill/Hook בשלב הראשון.
-4. לבצע שלוש משימות דומות.
-5. להשוות context, זמן, תיקונים ורגרסיות.
-6. רק לאחר מכן לבדוק `safe-change` או Hook בטיחות אחד.
+### שלב 6 — permissions
+Deny/Ask/Allow מדורג; לאחר מכן Hook קטן רק אם נשאר פער.
 
-## 15. מה יניב צריך לעשות מעכשיו
-1. לפתוח Claude בתוך תיקיית הריפו הנכונה.
-2. לתת משימה אחת ברורה בכל session.
-3. לא להדביק super-prompts ארוכים.
-4. לא לבחור Opus/high effort כברירת מחדל.
-5. לא להפעיל agents רבים למחקר רחב ללא צורך.
-6. לבקש branch + PR, לא merge אוטומטי בפרויקט משמעותי.
-7. לדרוש דיווח נפרד: מה נבדק מקומית ומה אומת חי.
-8. להשתמש ב־`/clear` כשעוברים נושא.
-9. לבדוק `/usage` אחרי משימה גדולה.
-10. לעצור תהליך שנראה רחב מדי ולצמצם scope לפני המשך.
+### שלב 7 — הרחבה
+להחיל רק רכיבים שהוכחו על ריפו נוסף אחד בכל פעם.
 
-## 16. החלטות שעדיין דורשות אישור יניב
-- האם `misparim` יהיה פרויקט הפיילוט.
-- האם ברירת המחדל תהיה תמיד PR ולא push ל־main גם בפרויקטים קטנים.
-- אילו שתי חסימות Hook הן החשובות ביותר.
-- אילו MCP/Plugins מותקנים בפועל במחשב ונמצאים בשימוש.
-- האם auto memory יישאר פעיל בכל הפרויקטים.
+## 17. מדדי הצלחה לאחר חודש
+- פחות הסברים חוזרים של דרישות.
+- אפס דרישה קריטית שנשכחה בפיילוטים.
+- ירידה של 20% בזמן פתיחה/הבנה או בשימוש, או שיפור איכות ברור באותה עלות.
+- פחות commits/PRs למשימה אחת.
+- פחות תיקון על תיקון.
+- פחות state מיושן.
+- פחות merges ללא evidence.
+- אפס מידע רגיש חדש ב־Git ציבורי.
+- Skill שניתן להסיר בלי לפגוע בפרויקט.
 
-## 17. הגדרת הצלחה
-המערכת טובה רק אם לאחר חודש:
-- יניב מסביר פחות פעמים את אותן העדפות.
-- זמן עד תוצאה עובדת יורד.
-- אין עלייה ברגרסיות.
-- context/token usage למשימה דומה יורד.
-- פחות sessions נתקעים במחקר רחב.
-- כל שינוי מסוכן ניתן לשחזור ולהסבר.
+## 18. מה לא עושים
+- לא מתקינים חבילות Skills גדולות.
+- לא מפעילים Agent Teams למחקר רגיל.
+- לא נותנים merge/deploy/DB write אוטומטי.
+- לא מעדכנים `CLAUDE.md` אוטומטית מכל הערת משתמש.
+- לא שומרים transcript כזיכרון.
+- לא טוענים שכל 42 הריפוים צריכים אותה ארכיטקטורה.
+- לא מוסיפים מסמך כללים נוסף לקלוטקורד.
+
+## 19. הגדרת הצלמה של קלוטקורד
+קלוטקורד מוכן ליישום כאשר:
+1. תוכנית זו נמצאת ב־`main`.
+2. inventory מקומי מסונן הושלם.
+3. baseline נמדד.
+4. Skill ראשון נבחר לפי ראיה—not לפי סרטון.
+5. כל פיילוט כולל success metric ו־rollback.
+6. כללי הפרויקט נשארים בדף מחייב אחד בלבד.
