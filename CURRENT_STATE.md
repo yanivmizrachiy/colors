@@ -16,66 +16,89 @@
 - `DECISIONS.md` הוא היסטוריית החלטות בלבד.
 - `docs/` ו־`research/` הם מחקר, ראיות ותוכניות בלבד.
 
-## היקף המחקר המעודכן
-לא ממשיכים לחקור לעומק את כל 42 הריפוזיטוריז. המחקר מתמקד רק בפרויקטי הליבה הגדולים, הפעילים והמשמעותיים ביותר, ובמשפחות שבהן קיימת חפיפה ארכיטקטונית או סיכון גבוה.
+## ארבעת צירי קלוטקורד
+1. **זיכרון דרישות אישי ומתמשך** — Claude לומד, מסווג ומפעיל דרישות מאושרות בלי כפילויות.
+2. **חיסכון בטוקנים וב-context** — טעינה לפי משימה, session נקי, Skills/Rules ממוקדים ומדידה אמיתית.
+3. **עבודה קצרה, נכונה וחכמה** — מסלולי Fast, Standard, High-risk ו-Research.
+4. **Skills ואוטומציות מועילים** — רק לאחר צורך מוכח, review, פיילוט, מדד הצלחה ו-rollback.
 
-### ריפו ליבה למחקר עומק
-1. `ma-assistant2` — מערכת שליטה מקומית, דפדפן, טלפון ומחשב.
-2. `server-core` — נבדק כחלק ממשפחת השליטה ובגלל חפיפה עם `ma-assistant2`.
-3. `mathmath` — מוצר הוראה מרכזי, PRs, Vercel ו־runtime.
-4. `misparim` — פיילוט הזיכרון והפרדת שני מוצרים באותו ריפו.
-5. `parabula-next` — מוצר גדול עם A4, mobile, PWA, CI ו־Agents.
-6. `maagar` — ingestion, PDF/DOCX, metadata, validators ו־browser QA.
-7. `www` — Moodle, DB, LTI, תלמידים ו־release readiness.
-8. `TALMID` — מערכת תלמיד/מורה עם פרטיות, DB והרשאות.
-9. `targilim` — דגם בשל של source of truth, verifiers ו־CI.
-10. `microsoft-forms` — אינטגרציה חיצונית, browser automation ואוטונומיה.
+מסמך הדרישות לתוכנית: `docs/SMART_WORK_SYSTEM_V2_REQUIREMENTS.md`.
 
-### פרויקטים משלימים בלבד
-`summer-workbook-h`, `word`, `termux`, `desktop`, `mobile-phone` ו־`github-journal` ישמשו רק כדוגמאות נקודתיות לדפוסים שאינם מופיעים בליבה: A4/PDF, PowerShell, מכשירים, scheduled automation או state drift. הם לא יקבלו דוח עומק מלא בשלב זה.
+## היקף המחקר
+- בבעלות יניב מופו 42 ריפוזיטוריז: metadata, פעילות, commits, PRs, קובצי כניסה ודפוסי עבודה.
+- המחקר העמוק מתמקד כעת בריפוים הגדולים, הפעילים והמשמעותיים ובמשפחות שבהן קיימת חפיפה או סיכון גבוה.
+- פרויקטים משלימים משמשים לראיות על PowerShell, מכשירים, PDF/A4, scheduled automation, Lovable/AI Studio ו-state drift.
 
-## יעד מרכזי: זיכרון דרישות אישי ומתמשך
-- Claude ילמד דרישות, העדפות, החלטות וחוזי מוצר של יניב לאורך זמן.
+## ריפו ליבה למחקר עומק
+1. `ma-assistant2`.
+2. `server-core`.
+3. `mathmath`.
+4. `misparim`.
+5. `parabula-next`.
+6. `maagar`.
+7. `www`.
+8. `TALMID`.
+9. `targilim`.
+10. `microsoft-forms`.
+
+## יעד מרכזי: זיכרון דרישות
 - המערכת תפריד בין כלל, העדפה, חוזה מוצר, החלטה, state, משימה, ראיה, היסטוריה ומידע רגיש.
 - דרישה חדשה לא תיכתב אוטומטית: Claude יזהה מועמד, יחפש כפילות או סתירה, יציע ניסוח ומיקום, ויעדכן רק לאחר אישור.
-- מסמך הדרישות המחקרי: `research/MEMORY_SYSTEM_REQUIREMENTS.md`.
+- הוראה חדשה שמבטלת קודמת תבצע supersede אמיתי ולא תישמר לצידה כגרסה פעילה נוספת.
+- מסמך המחקר: `research/MEMORY_SYSTEM_REQUIREMENTS.md`.
 
-## מה נחקר על דרך העבודה עם Claude Code
-- commits ו־PRs של Claude בפרויקטי הליבה.
-- מהירות יצירת PR עד merge.
-- PRs קטנים מול PRs רחבים.
-- עבודה ישירות על `main` לעומת branch/PR.
-- source-of-truth, STATE, rules, agents, commands ו־launch configurations.
-- CI מקומי מול live/browser/PWA/device verification.
-- עבודה בין Claude Code, GitHub, Lovable, AI Studio, hosting, Windows ו־Termux.
-- מסמך דפוסים מסונן: `research/CLAUDE_CODE_WORK_PATTERNS.md`.
+## דפוסי העבודה שנחקרו
+- commits ו-PRs של Claude בפרויקטי הליבה.
+- merge מהיר מול PRs גדולים ורבי-commits.
+- עבודה ישירות על `main` מול branch/PR.
+- תיקון על תיקון ו-root-cause review.
+- source-of-truth, STATE, rules, agents, commands ו-launch configurations.
+- CI מקומי מול browser/live/PWA/device verification.
+- עבודה בין Claude Code, GitHub, Lovable, AI Studio, hosting, Windows ו-Termux.
+- scheduled workflows, push אוטומטי ו-generated artifacts.
+- permissions רחבות מדי ופעולות merge/deploy.
+- מסמך המחקר: `research/CLAUDE_CODE_WORK_PATTERNS.md`.
+
+## ביקורת דפי הכללים הגדולים
+נבנתה ביקורת אחידה לריפו הליבה:
+- מקור סמכות מוצהר מול מקור סמכות בפועל.
+- גודל ועלות טעינה.
+- state/history/runtime בתוך rules.
+- מידע אישי או עובדות זמניות.
+- סתירות בתוך ריפו ובין ריפוים.
+- validators, tests ו-CI שמאכפים את הכללים.
+- permissions ושערי merge/deploy.
+
+מסמך הביקורת: `research/LARGE_REPOSITORY_RULES_AUDIT.md`.
 
 ## ממצאי רוחב ראשוניים
-- יניב משתמש ב־Claude Code כמפתח, חוקר, בודק, מעצב ומפעיל מערכות.
-- חוזקות: עבודה אמיתית, תיאורי PR עשירים, בדיקות עמוקות, מקור תוכן מאושר, browser/live verification ופתרונות שורש.
-- חיכוך: merge מהיר מדי בחלק מהפרויקטים, commits ישירות ל־main, PRs גדולים, תיקון על תיקון, state ישן, rules כבדים ו־PRs מחקריים שנותרו פתוחים.
-- ברוב ריפו הליבה אין עדיין Skills/Hooks native; העבודה נשענת בעיקר על Markdown, scripts ו־CI.
-- נמצא דגם טוב של Agents/Commands דקים שמפנים למקור כללים יחיד.
-- נמצאה הרשאת project-local רחבה מדי למיזוג PR באחד הפרויקטים; היא תיכלל בביקורת הרשאות.
+- “דף כללים יחיד” הוא תנאי חשוב אך אינו מספיק; הוא עלול להפוך למסמך ענק שמכיל את כל הפרויקט.
+- ריבוי מקורות הוראה יוצר סתירות ישירות גם בפרויקטים עם discipline גבוה.
+- validator מבני יכול להוכיח שקיים מקור אחד, אך לא בהכרח freshness, consistency או correctness.
+- הדגם החזק ביותר משלב: מקור סמכות קצר, pointers דקים, domain loading, guards דטרמיניסטיים ו-state שנגזר מחדש.
+- ברוב ריפו הליבה אין עדיין Skills/Hooks native; העבודה נשענת בעיקר על Markdown, scripts ו-CI.
+- נמצאו אוטומציות שכותבות rules/state או עושות push ישיר; הן ייבחנו מחדש לפי risk lane.
+- אין להתקין Skill packs או Plugins לפני inventory, baseline ופיילוט צר.
 
 ## מצב `misparim`
-- `misparim/main` נשאר בסיס baseline ב־SHA `ce020c8fcf026f0ba1909f5844a49ab7ac0aafe3`.
-- מועמד שינוי: `pilot/claude-memory-v1` ב־SHA `4c03a1cc02ebe72856a320ec7d71092e62d38bec`.
+- `misparim/main` נשאר בסיס baseline ב-SHA `ce020c8fcf026f0ba1909f5844a49ab7ac0aafe3`.
+- מועמד שינוי: `pilot/claude-memory-v1` ב-SHA `4c03a1cc02ebe72856a320ec7d71092e62d38bec`.
 - PR: `yanivmizrachiy/misparim#1`.
-- ה־PR פתוח ולא מוזג.
-- לא מתחילים את הפיילוט לפני השלמת מחקר הליבה.
+- ה-PR פתוח ולא מוזג.
+- לא מתחילים את הפיילוט לפני השלמת מחקר הליבה והגדרת מדדים.
 
-## מה עדיין חסר
-- השלמת דוחות עומק לריפו הליבה בלבד.
-- הכרעה על היחס בין `ma-assistant2` ל־`server-core`.
-- השוואת מודלי הזיכרון של `misparim`, `targilim`, `parabula-next`, `TALMID` ו־`microsoft-forms`.
-- מיפוי CI, permissions ו־merge gates בפרויקטי הליבה.
-- inventory מקומי של Claude Code: גרסה, user settings, Plugins, Skills, Hooks, MCP ו־auto memory.
-- מדידת context/tokens ממשימות אמיתיות.
-- רק לאחר מכן: baseline, פיילוט הרחבה ותוכנית עבודה אישית גרסה 2.
+## מה עדיין חסר לפני התוכנית הסופית
+- השלמת ההשוואה המלאה של עשרת ריפו הליבה.
+- הכרעה על היחס בין מערכות שמכריזות במקביל שהן canonical.
+- מיפוי CI, permissions, merge gates ואוטומציות כתיבה.
+- inventory מקומי של Claude Code: גרסה, user settings, Plugins, Skills, Hooks, MCP ו-auto memory.
+- מדידת context/tokens וזמן במשימות אמיתיות.
+- בחירת Skill ראשון לפי חיכוך מדיד.
+- ביקורת פרטיות מסוננת בריפוים הציבוריים.
 
 ## הצעד הבא
-1. להשלים מחקר עומק רק בעשרת ריפו הליבה.
-2. להפיק מטריצת השוואה אחת: זיכרון, Git, CI, preview, הרשאות, אוטומציה ו־privacy.
-3. להכריע אילו דפוסים הופכים לתוכנית העבודה האישית של יניב.
-4. לאחר מכן בלבד לעבור לפיילוט Skills/Plugins ולתוכנית הסופית.
+1. להשלים את מטריצת דפי הכללים של ריפו הליבה.
+2. להכריע canonical/legacy/workspace/child במשפחות החופפות.
+3. לבצע inventory מקומי בטוח של Claude Code.
+4. לקבע baseline של זמן, context ותיקונים.
+5. לאחר מכן לבנות את תוכנית העבודה הסופית ולקדם פיילוט Skill/Plugin אחד.
