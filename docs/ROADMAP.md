@@ -3,7 +3,7 @@
 > מפת שלבים בלבד. מקור הכללים המחייב היחיד הוא `CLAUDE.md`; המצב החי נמצא ב־`CURRENT_STATE.md`; התוכנית המלאה נמצאת ב־`docs/PERSONAL_WORK_SYSTEM_PLAN.md`.
 
 ## מצב
-המחקר המרכזי ותוכנית העבודה האישית גרסה 2 הושלמו. קלוטקורד עובר כעת ממחקר פתוח ליישום מדורג, בטוח ומדיד.
+המחקר המרכזי ותוכנית העבודה האישית גרסה 2 הושלמו. קלוטקורד נמצא בשלב היישום המדורג: כלי Inventory מוכן ומאומת, מפרט `capture-requirement` מוכן, אך שום Skill או הגדרה מקומית עדיין לא הותקנו.
 
 ## שלב 0 — תשתית וניקוי
 - [x] בחירת ריפו מרכזי.
@@ -11,32 +11,38 @@
 - [x] קביעת שם המיזם: **קלוטקורד**.
 - [x] יצירת `CLAUDE.md` כדף כללים יחיד.
 - [x] הפרדת כללים, מצב, החלטות, מחקר ותוכנית.
-- [x] הסרת פרומפט הסלון הישן ומסמך אבטחה כפול.
-- [x] מחיקת `research/IMPLEMENTATION_PRIORITY.md` הכפול.
+- [x] הסרת מסמכים כפולים וישנים.
 - [x] יצירת תוכנית עבודה אישית גרסה 2.
 - [x] יצירת דרישות מערכת הזיכרון ומסמך דפוסי העבודה.
-- [x] עדכון המדריך היומי לתוכנית גרסה 2.
+- [x] עדכון המדריך היומי.
 - [ ] Rename של ה־slug מ־`colors` ל־`klotkord`.
 - [ ] החלטה אם להפוך את הריפו ל־Private כדי לאפשר זיכרון אישי מלא.
 
 ## שלב 1 — מחקר העבודה האמיתית
 - [x] מחקר ריפו הליבה הגדולים והפעילים.
 - [x] ניתוח commits, PRs, CI, state, rules, agents והרשאות.
-- [x] זיהוי חוזקות: עבודה אמיתית, tests, preview, source of truth ופתרונות שורש.
-- [x] זיהוי חיכוך: merge מהיר, PRs רחבים, state ישן, תיקון על תיקון וכללים כבדים.
+- [x] זיהוי חוזקות וחיכוך.
 - [x] מחקר רשמי של Memory, Skills, Hooks, Plugins, MCP, Subagents, Agent Teams, permissions, sandbox, sessions ועלויות.
 - [x] דירוג מועמדי ההרחבות.
 - [x] הגדרת זיכרון דרישות אישי כיעד המרכזי.
 
 ## שלב 2 — Inventory מקומי בטוח
-- [ ] גרסת Claude Code.
-- [ ] user settings מסוננים.
-- [ ] auto memory וקבצים שנטענים.
-- [ ] שמות Skills, Plugins, Hooks ו־MCP פעילים.
-- [ ] permissions מסוג allow / ask / deny.
-- [ ] בדיקת Windows מול WSL2 לצורך sandbox.
-- [ ] בדיקת גודל `CLAUDE.md`, skill listing ו־context פתיחה בפרויקט פיילוט.
-- [ ] אין קריאת secrets, transcripts, cookies או ערכי env.
+### כלי
+- [x] נוצר `scripts/Collect-ClaudeCodeInventory.ps1`.
+- [x] נוספו הוראות ב־`docs/LOCAL_INVENTORY.md`.
+- [x] parser והרצה אמיתית עברו ב־Windows GitHub Actions.
+- [x] הכלי אינו קורא `~/.claude.json`, ערכי env, permission values, MCP URLs, transcripts או secrets.
+
+### הרצה על מחשב יניב
+- [ ] להריץ את הכלי ולבדוק את קובצי JSON/Markdown.
+- [ ] לתעד גרסת Claude Code.
+- [ ] לתעד user settings מסוננים.
+- [ ] לתעד auto memory וקבצים שנטענים.
+- [ ] לתעד שמות Skills, Plugins, Hooks ו־MCP פעילים.
+- [ ] לתעד permissions מסוג allow / ask / deny.
+- [ ] לבדוק Windows מול WSL2 לצורך sandbox.
+- [ ] לבדוק גודל `CLAUDE.md`, skill listing ו־context פתיחה.
+- [ ] לבצע ידנית `/status`, `/context`, `/memory`, `/plugin`, `/mcp`, `/doctor` ו־`/usage` כסיכום מסונן.
 
 ## שלב 3 — Baseline
 שלוש משימות אמיתיות לפני שינוי סביבת העבודה:
@@ -44,7 +50,7 @@
 - [ ] P2 — שינוי קוד בינוני עם typecheck/build/preview.
 - [ ] P3 — audit read-only.
 - [ ] session חדש לכל משימה.
-- [ ] קיבוע model ו־effort להשוואה.
+- [ ] אותו model ו־effort במשימות ההשוואה.
 - [ ] מדידת `/usage`, `/context`, זמן, קבצים שנקראו, תיקונים ורגרסיות.
 - [ ] שמירת תוצאות מסוכמות בלבד, ללא transcript.
 
@@ -69,15 +75,26 @@
 - [ ] החלטה: keep, adjust או revert.
 
 ## שלב 5 — Skill ראשון: `capture-requirement`
-- [ ] לכתוב specification קצר.
-- [ ] להגדיר `disable-model-invocation: true`.
-- [ ] להגדיר Read/Grep בלבד בשלב הזיהוי.
-- [ ] לסווג requirement / preference / contract / decision / state / task / sensitive.
-- [ ] לחפש כפילות וסתירה.
-- [ ] להציע ניסוח קנוני, scope, מיקום ומה יוחלף.
-- [ ] לא לכתוב בלי אישור יניב.
-- [ ] למדוד פחות חזרות, אפס כפילויות ואפס דרישות קריטיות שנשכחו.
-- [ ] להחליט keep / adjust / remove.
+### תכנון
+- [x] נכתב מפרט מלא: `docs/skills/CAPTURE_REQUIREMENT_SPEC.md`.
+- [x] הוגדר workflow דו־שלבי: ניתוח read-only ואז כתיבה נפרדת דרך `safe-change`.
+- [x] הוגדרו 20 תרחישי קבלה.
+- [x] נוצר `DRAFT.md` לא־פעיל שאינו יכול להיטען כ־Skill.
+- [x] הוגדר ש־`allowed-tools` אינו גבול בטיחות יחיד.
+
+### לפני התקנה
+- [ ] להשלים Inventory ו־Baseline.
+- [ ] לאמת שמות כלים ו־permissions בגרסה המקומית.
+- [ ] להפוך את הטיוטה ל־`SKILL.md` עם `disable-model-invocation: true` ו־`disallowed-tools` מתאימים.
+- [ ] לקבל אישור יניב לפורמט הפלט.
+
+### פיילוט
+- [ ] להריץ 20 תרחישי קבלה.
+- [ ] בטיחות: A05, A10, A12 ו־A15 עוברים ב־100%.
+- [ ] לפחות 18 מתוך 20 תרחישים עוברים ללא תיקון.
+- [ ] אפס כתיבות, shell או חשיפת מידע רגיש.
+- [ ] ממוצע עד 5 קבצים לחיפוש.
+- [ ] החלטה: keep / adjust / remove.
 
 ## שלב 6 — בטיחות ושינוי נכון
 לפי החיכוך שנמדד:
@@ -127,8 +144,7 @@
 - [ ] רכיבים שלא היו בשימוש.
 - [ ] גודל `CLAUDE.md`, auto memory ו־skill listing.
 - [ ] דרישות כפולות או סותרות.
-- [ ] state מיושן.
-- [ ] מידע רגיש.
+- [ ] state מיושן ומידע רגיש.
 - [ ] הצעת הסרה או עדכון בלבד—not שינוי אוטומטי.
 
 ## שערים שאסור לדלג עליהם
@@ -156,8 +172,11 @@
 - מצב חי: `CURRENT_STATE.md`.
 - תוכנית מלאה: `docs/PERSONAL_WORK_SYSTEM_PLAN.md`.
 - מדריך יומי: `docs/YANIV_DAILY_GUIDE.md`.
+- Inventory: `docs/LOCAL_INVENTORY.md`.
 - מחקר רשמי: `docs/OFFICIAL_CLAUDE_CODE_FINDINGS.md`.
 - מערכת זיכרון: `research/MEMORY_SYSTEM_REQUIREMENTS.md`.
 - דפוסי עבודה: `research/CLAUDE_CODE_WORK_PATTERNS.md`.
 - מועמדי הרחבות: `research/EXTENSION_CANDIDATES.md`.
-- פיילוט: `docs/PILOT_MISPARIM_READINESS.md` ו־Issue #12.
+- מפרט Skill ראשון: `docs/skills/CAPTURE_REQUIREMENT_SPEC.md`.
+- מבחני קבלה: `docs/skills/CAPTURE_REQUIREMENT_ACCEPTANCE.md`.
+- פיילוט `misparim`: `docs/PILOT_MISPARIM_READINESS.md` ו־Issue #12.
