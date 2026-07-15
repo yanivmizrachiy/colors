@@ -19,12 +19,17 @@
 - תוכנית עבודה אישית **קלוטקורד גרסה 2**.
 - דרישות מערכת זיכרון אישי ומתמשך.
 - דירוג Skills ו־Plugins ותוכנית פיילוט מדורגת.
-- `research/IMPLEMENTATION_PRIORITY.md` הכפול נמחק.
+- כלי Inventory מקומי בטוח מוזג ב־PR #19 ונבדק בהצלחה על Windows.
+- מפרט קריאה בלבד ל־`capture-requirement` הוכן.
+- 20 תרחישי קבלה ל־`capture-requirement` הוגדרו.
+- טיוטת ה־Skill נשמרה בשם `DRAFT.md` ולכן אינה פעילה ואינה ניתנת להפעלה בטעות.
 
 ## החלטות פעילות
 - זיכרון דרישות הוא היעד הראשון.
-- ה־Skill הראשון יהיה `capture-requirement`, לאחר inventory ו־baseline.
+- `capture-requirement` ינתח ויציע בלבד; הוא לא יכתוב קבצים.
+- שמירה מאושרת תבוצע בשלב נפרד דרך `safe-change` ו־Git review.
 - דרישה חדשה נשמרת רק לאחר סיווג, חיפוש סתירה, הצעת ניסוח ואישור יניב.
+- `allowed-tools` אינו משמש כגבול בטיחות יחיד; ההגבלה תסתמך על `disallowed-tools` ו־permissions לאחר Inventory.
 - Sonnet הוא ברירת המחדל; Opus שמור לתכנון מורכב, אבטחה ו־root cause.
 - משימה משמעותית אחת בכל session.
 - Permissions קודמות ל־Hooks כאשר הן מספיקות.
@@ -35,16 +40,19 @@
 - baseline נשמר ב־`main` ב־SHA `ce020c8fcf026f0ba1909f5844a49ab7ac0aafe3`.
 - מועמד השינוי נמצא ב־PR #1 ובענף `pilot/claude-memory-v1`.
 - ה־PR פתוח ולא ממוזג.
-- אין merge לפני inventory, שלוש מדידות baseline, review ודיווח.
+- אין merge לפני Inventory, שלוש מדידות baseline, review ודיווח.
 
 ## השלב הפעיל הבא
-1. Inventory מקומי מסונן: גרסה, settings לא־רגישים, auto memory, Skills, Plugins, Hooks, MCP, permissions ו־Windows/WSL2.
-2. Baseline: שינוי UI קטן, שינוי קוד בינוני ו־audit read-only.
-3. פיילוט הזיכרון ב־`misparim`.
-4. פיילוט `capture-requirement`.
-5. `safe-change` או Permission profile, אחריהם TypeScript LSP ו־`ui-verify`.
+1. להריץ את כלי ה־Inventory על המחשב של יניב ולבדוק את קובצי הפלט.
+2. להשלים ידנית `/status`, `/context`, `/memory`, `/plugin`, `/mcp`, `/doctor` ו־`/usage` כסיכום מסונן.
+3. לבצע Baseline: שינוי UI קטן, שינוי קוד בינוני ו־audit read-only.
+4. לבצע את פיילוט הזיכרון ב־`misparim`.
+5. להפוך את טיוטת `capture-requirement` ל־`SKILL.md` רק לאחר אימות שמות הכלים וה־permissions המקומיים.
+6. להריץ את 20 תרחישי הקבלה ולהחליט keep / adjust / remove.
+7. לאחר מכן: `safe-change` או Permission profile, TypeScript LSP ו־`ui-verify`.
 
 ## עדיין לא בוצע
+- ה־Inventory טרם הורץ על המחשב של יניב.
 - לא הותקן Skill, Plugin, Hook או MCP חדש.
 - לא שונו הגדרות Claude Code המקומיות.
 - לא בוצעו מדידות baseline ולא מוזג `misparim#1`.
