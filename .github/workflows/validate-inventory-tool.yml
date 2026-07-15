@@ -1,0 +1,74 @@
+name: Validate Claude inventory tool
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/Collect-ClaudeCodeInventory.ps1'
+      - 'docs/LOCAL_INVENTORY.md'
+      - '.github/workflows/validate-inventory-tool.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Parse PowerShell script
+        shell: pwsh
+        run: |
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            (Resolve-Path '.\scripts\Collect-ClaudeCodeInventory.ps1'),
+            [ref]$tokens,
+            [ref]$errors
+          ) | Out-Null
+
+          if ($errors.Count -gt 0) {
+            $errors | Format-List | Out-String | Write-Error
+            exit 1
+          }
+
+      - name: Run inventory in a temporary directory
+        shell: pwsh
+        run: |
+          $output = Join-Path $env:RUNNER_TEMP 'klotkord-inventory-test'
+          .\scripts\Collect-ClaudeCodeInventory.ps1 `
+            -ProjectPath (Get-Location).Path `
+            -OutputDirectory $output
+
+          $json = Get-ChildItem -LiteralPath $output -Filter '*.json' | Select-Object -First 1
+          $markdown = Get-ChildItem -LiteralPath $output -Filter '*.md' | Select-Object -First 1
+
+          if (-not $json -or -not $markdown) {
+            throw 'Inventory output files were not created.'
+          }
+
+          $data = Get-Content -LiteralPath $json.FullName -Raw -Encoding UTF8 | ConvertFrom-Json
+
+          if (-not $data.safety.read_only) {
+            throw 'Inventory did not report read-only mode.'
+          }
+
+          foreach ($property in @(
+            'read_claude_json',
+            'read_environment_values',
+            'read_permission_rule_values',
+            'read_mcp_urls_or_headers',
+            'read_transcripts',
+            'read_secrets',
+            'network_commands_executed'
+          )) {
+            if ($data.safety.$property) {
+              throw "Unsafe inventory flag is true: $property"
+            }
+          }
+
+          if ($data.schema_version -ne 1) {
+            throw 'Unexpected inventory schema version.'
+          }
