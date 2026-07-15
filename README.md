@@ -1,62 +1,72 @@
 # קלוטקורד
 
-מרכז השליטה של יניב למחקר, תכנון, מדידה ושיפור העבודה האמיתית עם Claude Code.
+מרכז השליטה של יניב לעבודה חכמה, מדויקת, בטוחה וחסכונית עם Claude Code.
 
-> **מקור הכללים המחייב היחיד הוא `CLAUDE.md`.** כל שאר הקבצים בריפו הם מצב, מחקר, ראיות, תבניות או תוכניות.
+> **מקור הכללים המחייב היחיד הוא `CLAUDE.md`.** כל שאר הקבצים הם מצב, תוכנית, מחקר, ראיות או תבניות.
 
 ## מטרת־העל
-לבנות מערכת עבודה אישית שמקצרת זמן, מצמצמת טעויות ושימוש מיותר, ומשפרת איכות, Git, בדיקות, פריסה, פרטיות והמשכיות בין מחשבים ופרויקטים.
+לבנות מערכת עבודה אישית שבה Claude:
+- לומד את הדרישות וההעדפות של יניב לאורך זמן.
+- שומר כל דרישה במקום נכון אחד.
+- מזהה כפילות או סתירה לפני עדכון.
+- טוען רק את המידע הנחוץ למשימה.
+- בוחר workflow, model וכלים לפי הסיכון.
+- מבצע עבודה בטוחה באופן עצמאי.
+- עוצר לפני merge, deploy, DB, auth או פעולה מסוכנת.
+- מוכיח שהתוצאה עובדת ולא מסתפק ב־build או PASS.
+
+## מצב נוכחי
+- המחקר המרכזי הושלם.
+- תוכנית העבודה האישית **גרסה 2** הושלמה.
+- דף הכללים היחיד עודכן לכל הדרישות שאושרו.
+- נבנו דרישות למערכת זיכרון אישי ומתמשך.
+- נבנה סדר Skills מדורג; הראשון יהיה `capture-requirement`.
+- טרם הותקנו Skills, Plugins, Hooks או MCP חדשים.
+- השלב הבא הוא inventory מקומי מסונן, ולאחריו baseline ופיילוטים מדידים.
+
+## נקודת הכניסה
+1. `CLAUDE.md` — הכללים המחייבים.
+2. `CURRENT_STATE.md` — מה קורה עכשיו ומה הצעד הבא.
+3. `docs/PERSONAL_WORK_SYSTEM_PLAN.md` — התוכנית המלאה גרסה 2.
+4. `docs/ROADMAP.md` — סדר היישום.
+5. `docs/YANIV_DAILY_GUIDE.md` — מדריך קצר לעבודה יומיומית.
+6. `research/MEMORY_SYSTEM_REQUIREMENTS.md` — דרישות מערכת הזיכרון.
+7. `research/CLAUDE_CODE_WORK_PATTERNS.md` — דפוסי העבודה שנמצאו.
+8. `research/EXTENSION_CANDIDATES.md` — Skills, Plugins וכלים מועמדים.
+9. `docs/OFFICIAL_CLAUDE_CODE_FINDINGS.md` — המחקר הרשמי.
+
+## לאן אנחנו הולכים
+### שלב 1 — Inventory מקומי בטוח
+גרסה, settings מסוננים, auto memory, Skills, Plugins, Hooks, MCP ו־permissions—ללא secrets או transcripts.
+
+### שלב 2 — Baseline
+שלוש משימות אמיתיות למדידת context, טוקנים, זמן, קבצים ותיקונים.
+
+### שלב 3 — פיילוט הזיכרון
+בדיקת מבנה זיכרון מדורג ב־`misparim` לפני merge של PR #1.
+
+### שלב 4 — Skill ראשון
+`capture-requirement`: סיווג דרישה, חיפוש כפילות וסתירה, הצעת ניסוח ומיקום, ושמירה רק לאחר אישור.
+
+### שלב 5 — בטיחות ויעילות
+`safe-change` או Permission profile, TypeScript LSP רשמי ו־`ui-verify`—כל אחד בפיילוט נפרד וניתן להסרה.
+
+### שלב 6 — הרחבה
+רק רכיב שהוכח עובר לריפו נוסף אחד בכל פעם.
+
+## עקרונות מרכזיים
+- אין דמו או הצלחה מומצאת.
+- אין הסכמה אוטומטית; Claude נותן ביקורת מקצועית.
+- אין שאלות שאפשר לפתור מחקירת הריפו.
+- אין super-prompt ארוך בכל משימה.
+- אין Skill pack, Agent Teams או MCP רבים כברירת מחדל.
+- אין אוטומציה שמשכתבת כללים או דוחפת קוד ל־`main`.
+- PASS אינו READY.
+- דרישה חדשה מעדכנת מקור אחד ולא מוסיפה כפילות.
+- פחות context וכלים—כל עוד האמינות נשמרת.
 
 ## זהות הריפו
 - שם המיזם: **קלוטקורד**.
-- כתובת הריפו הנוכחית: `yanivmizrachiy/colors`.
-- שינוי ה־slug ל־`klotkord` דורש פעולת Rename בהגדרות GitHub; עד אז השם המקצועי במסמכים הוא קלוטקורד.
-- התוכן המקורי של פרויקט `colors` נשמר בענף `archive/colors-original-2026-07-14`.
-
-## מצב נוכחי
-- מחקר ותוכנית עבודה אישית — הושלמו בגרסה 1.
-- חבילת פיילוט מדידה — הושלמה.
-- ב־`misparim` קיים מועמד שינוי מבודד ב־PR #1 בלבד.
-- `misparim/main` נשאר baseline אמיתי ללא שינוי.
-- PR #1 אינו ממוזג; השלב הפעיל הוא מדידות baseline לפני החלטת merge.
-- במקביל מתבצע מחקר עדכני על Skills, Hooks, Plugins, MCP, Subagents, Agent Teams, permissions, sandboxing, context ואוטומציות.
-
-## נקודת הכניסה
-1. `CLAUDE.md` — דף הכללים היחיד.
-2. `CURRENT_STATE.md` — המצב החי והצעד הבא.
-3. `docs/ROADMAP.md` — מפת השלבים.
-4. `docs/PERSONAL_WORK_SYSTEM_PLAN.md` — תוכנית העבודה האישית.
-5. `docs/OFFICIAL_CLAUDE_CODE_FINDINGS.md` — מחקר רשמי ועדכני.
-6. `docs/projects/` — מחקר העבודה בפועל בריפוים של יניב.
-7. `research/OPPORTUNITY_REGISTER.md` — מועמדים עתידיים, לא הרשאות לביצוע.
-8. `templates/CLAUDE_TASK_BRIEF.md` — תבנית משימה קצרה.
-9. `templates/BASELINE_SESSION_RECORD.md` — תבנית מדידה.
-
-## מבנה הידע
-### מצב וניהול
-- `CURRENT_STATE.md`
-- `DECISIONS.md` — היסטוריית החלטות, לא דף כללים.
-- `RESEARCH_LOG.md`
-- `docs/ROADMAP.md`
-
-### מחקר
-- `docs/OFFICIAL_CLAUDE_CODE_FINDINGS.md`
-- `docs/projects/`
-- `research/REPOSITORY_INDEX.md`
-- `research/CROSS_PROJECT_MATRIX.md`
-- `research/OPPORTUNITY_REGISTER.md`
-- `research/IMPLEMENTATION_PRIORITY.md`
-
-### תוכנית וכלי עבודה
-- `docs/PERSONAL_WORK_SYSTEM_PLAN.md`
-- `docs/YANIV_DAILY_GUIDE.md`
-- `docs/PILOT_MISPARIM_READINESS.md`
-- `templates/CLAUDE_TASK_BRIEF.md`
-- `templates/BASELINE_SESSION_RECORD.md`
-
-## מצב הניסוי ב־`misparim`
-- baseline: `main` ב־SHA `ce020c8fcf026f0ba1909f5844a49ab7ac0aafe3`.
-- מועמד שינוי: `pilot/claude-memory-v1` ב־SHA `4c03a1cc02ebe72856a320ec7d71092e62d38bec`.
-- PR: `yanivmizrachiy/misparim#1`.
-- Vercel: success.
-- אין merge לפני שלוש מדידות baseline, review ודיווח.
+- כתובת נוכחית: `yanivmizrachiy/colors`.
+- שינוי ה־slug ל־`klotkord` עדיין דורש Rename בהגדרות GitHub.
+- התוכן המקורי של `colors` שמור בענף `archive/colors-original-2026-07-14`.

@@ -3,12 +3,12 @@
 עודכן: 2026-07-15
 
 ## סטטוס נוכחי
-הפיילוט עבר משלב מוכנות לשלב **baseline מול מועמד שינוי מוכן**:
+הפיילוט מוכן לשלב **baseline מול מועמד שינוי מוכן**, אך מתחיל רק לאחר inventory מקומי מסונן של סביבת Claude Code:
 - `misparim/main` נשאר ללא שינוי ב־SHA `ce020c8fcf026f0ba1909f5844a49ab7ac0aafe3`.
 - מועמד השינוי הוכן בענף `pilot/claude-memory-v1` וב־PR #1.
 - מועמד השינוי נמצא ב־SHA `4c03a1cc02ebe72856a320ec7d71092e62d38bec`.
 - ה־PR פתוח, mergeable ו־Vercel success, אך **לא ממוזג**.
-- השלב הבא הוא שלוש מדידות baseline על `main` הישן.
+- לאחר inventory יבוצעו שלוש מדידות baseline על `main` הישן.
 
 ## מטרת הפיילוט
 לבדוק באופן מדיד האם ארכיטקטורת זיכרון רזה ומדורגת משפרת את העבודה עם Claude Code בלי להוריד איכות, אמינות או המשכיות.
@@ -51,7 +51,15 @@
 - זמן שבו יניב נדרש לעקוב אחרי התהליך.
 - דירוג בהירות ואיכות בסולם 1–5.
 
-## עיצוב הניסוי המתוקן
+## עיצוב הניסוי
+### שלב 0 — Inventory מקומי מסונן
+- גרסת Claude Code.
+- settings לא־רגישים.
+- auto memory וקבצים שנטענים.
+- שמות Skills, Plugins, Hooks ו־MCP.
+- permissions מסוג allow / ask / deny.
+- אין secrets, transcripts, cookies או ערכי env.
+
 ### שלב A — Baseline על המצב הישן
 לבצע שלוש משימות רגילות מתוך checkout של `misparim/main` ב־SHA הקבוע:
 1. P1 — שינוי תוכן/עיצוב קטן עם preview.
@@ -108,6 +116,7 @@ PR #1 כולל:
 - אין לערב שינויי מוצר באותו PR.
 
 ## תוצרי הפיילוט
+- inventory מקומי מסונן.
 - שלושה רישומי baseline.
 - review מתועד של PR #1.
 - שלושה רישומי post-change, אם ה־PR מוזג.
@@ -117,7 +126,7 @@ PR #1 כולל:
 
 ## מקור שליטה
 - מצב חי: `CURRENT_STATE.md`.
-- ביקורת: `docs/REPOSITORY_AUDIT_2026-07-15.md`.
+- תוכנית מלאה: `docs/PERSONAL_WORK_SYSTEM_PLAN.md`.
 - checklist: Issue #12.
 - תבנית מדידה: `templates/BASELINE_SESSION_RECORD.md`.
 - PR מועמד: `yanivmizrachiy/misparim#1`.

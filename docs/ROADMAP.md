@@ -1,74 +1,59 @@
 # תוכנית העבודה של קלוטקורד
 
-> מפת שלבים בלבד. מקור הכללים המחייב היחיד הוא `CLAUDE.md`; המצב החי נמצא ב־`CURRENT_STATE.md`.
+> מפת שלבים בלבד. מקור הכללים המחייב היחיד הוא `CLAUDE.md`; המצב החי נמצא ב־`CURRENT_STATE.md`; התוכנית המלאה נמצאת ב־`docs/PERSONAL_WORK_SYSTEM_PLAN.md`.
 
 ## מצב
-המחקר והתוכנית האישית לגרסה 1 הושלמו. קלוטקורד נמצא כעת בשלושה מסלולים מסודרים:
-1. ניקוי והקשחת הריפו המרכזי.
-2. baseline מול מועמד שינוי מוכן ב־`misparim`.
-3. מחקר ודירוג הרחבות לפני פיילוט של Plugin או Skill אחד.
+המחקר המרכזי ותוכנית העבודה האישית גרסה 2 הושלמו. קלוטקורד עובר כעת ממחקר פתוח ליישום מדורג, בטוח ומדיד.
 
-## שלב 0 — תשתית קלוטקורד
+## שלב 0 — תשתית וניקוי
 - [x] בחירת ריפו מרכזי.
 - [x] גיבוי מלא לתוכן `colors` הישן.
-- [x] הגדרת פרטיות ומודל ראיות.
-- [x] בניית אינדקס, מטריצה ורשם הזדמנויות.
 - [x] קביעת שם המיזם: **קלוטקורד**.
-- [x] יצירת `CLAUDE.md` כדף כללים מחייב יחיד.
-- [x] סימון `DECISIONS.md` כהיסטוריית החלטות בלבד.
-- [x] הסרת פרומפט ההפעלה הישן של מחשב הסלון.
-- [x] הסרת מסמך כללי אבטחה כפול.
-- [ ] Rename של ה־slug מ־`colors` ל־`klotkord` דרך GitHub.
-- [ ] החלטה אם להפוך את הריפו ל־Private.
+- [x] יצירת `CLAUDE.md` כדף כללים יחיד.
+- [x] הפרדת כללים, מצב, החלטות, מחקר ותוכנית.
+- [x] הסרת פרומפט הסלון הישן ומסמך אבטחה כפול.
+- [x] מחיקת `research/IMPLEMENTATION_PRIORITY.md` הכפול.
+- [x] יצירת תוכנית עבודה אישית גרסה 2.
+- [x] יצירת דרישות מערכת הזיכרון ומסמך דפוסי העבודה.
+- [x] עדכון המדריך היומי לתוכנית גרסה 2.
+- [ ] Rename של ה־slug מ־`colors` ל־`klotkord`.
+- [ ] החלטה אם להפוך את הריפו ל־Private כדי לאפשר זיכרון אישי מלא.
 
 ## שלב 1 — מחקר העבודה האמיתית
-- [x] `mathmath` — זיכרון קצר, PRs ובדיקות מול פערי runtime/Vercel.
-- [x] `parabula-next` — מקור כללים יחיד, thin pointers ו־CI רחב.
-- [x] `misparim` — זיכרון מדורג, כפילויות ועלות טעינה.
-- [x] `maagar` — guards, dry-run, hashes ו־browser QA.
-- [x] `microsoft-forms` — research-first, acceptance tests ואוטונומיה.
-- [x] `www` — truth gates, release readiness ועומס STATE.
-- [x] `bbb` — הוראות מקומיות לפי תת־פרויקט.
-- [x] הפקת דפוסים חוצי־פרויקטים.
-- [x] זיהוי מקורות בזבוז: context קבוע, state כפול, agent teams, PRs גדולים ו־CI כפול.
+- [x] מחקר ריפו הליבה הגדולים והפעילים.
+- [x] ניתוח commits, PRs, CI, state, rules, agents והרשאות.
+- [x] זיהוי חוזקות: עבודה אמיתית, tests, preview, source of truth ופתרונות שורש.
+- [x] זיהוי חיכוך: merge מהיר, PRs רחבים, state ישן, תיקון על תיקון וכללים כבדים.
+- [x] מחקר רשמי של Memory, Skills, Hooks, Plugins, MCP, Subagents, Agent Teams, permissions, sandbox, sessions ועלויות.
+- [x] דירוג מועמדי ההרחבות.
+- [x] הגדרת זיכרון דרישות אישי כיעד המרכזי.
 
-## שלב 2 — מחקר Claude Code עדכני
-- [x] Memory, CLAUDE.md, auto memory ו־path rules.
-- [x] Skills ו־skill listing cost.
-- [x] Hooks ו־PreToolUse.
-- [x] Permissions ו־PowerShell rules.
-- [x] Sandbox והבדלי Windows/WSL2.
-- [x] Subagents ו־Agent Teams.
-- [x] MCP, Tool Search ו־CLI.
-- [x] Plugins, official/community marketplaces ו־LSP.
-- [x] Checkpoints, rewind ו־sessions.
-- [x] Scheduled tasks ואוטומציה.
-- [x] `/usage`, `/context`, `/clear`, `/compact`, מודלים ו־effort.
-- [x] רשם מועמדי הרחבות: `research/EXTENSION_CANDIDATES.md`.
-- [ ] inventory מקומי מסונן של גרסה ורכיבים מותקנים בפועל.
-- [ ] אימות שם ודרישות ה־Plugin הרשמי ל־TypeScript LSP.
+## שלב 2 — Inventory מקומי בטוח
+- [ ] גרסת Claude Code.
+- [ ] user settings מסוננים.
+- [ ] auto memory וקבצים שנטענים.
+- [ ] שמות Skills, Plugins, Hooks ו־MCP פעילים.
+- [ ] permissions מסוג allow / ask / deny.
+- [ ] בדיקת Windows מול WSL2 לצורך sandbox.
+- [ ] בדיקת גודל `CLAUDE.md`, skill listing ו־context פתיחה בפרויקט פיילוט.
+- [ ] אין קריאת secrets, transcripts, cookies או ערכי env.
 
-## שלב 3 — תוכנית אישית גרסה 1
-- [x] ארכיטקטורת זיכרון גלובלית ופרויקטלית.
-- [x] סיווג משימות קטנות/בינוניות/גדולות.
-- [x] מדיניות Sonnet/Opus/effort.
-- [x] כללי context, clear, compact ו־handoff.
-- [x] מדיניות Subagents ו־MCP.
-- [x] Git/PR/deploy workflow.
-- [x] מודל אימות: static → build → interaction → environment → live.
-- [x] בחירת `misparim` כמועמד פיילוט.
-- [ ] עדכון לתוכנית סופית גרסה 2 לאחר inventory, baseline ופיילוט הרחבה.
+## שלב 3 — Baseline
+שלוש משימות אמיתיות לפני שינוי סביבת העבודה:
+- [ ] P1 — שינוי UI קטן עם preview.
+- [ ] P2 — שינוי קוד בינוני עם typecheck/build/preview.
+- [ ] P3 — audit read-only.
+- [ ] session חדש לכל משימה.
+- [ ] קיבוע model ו־effort להשוואה.
+- [ ] מדידת `/usage`, `/context`, זמן, קבצים שנקראו, תיקונים ורגרסיות.
+- [ ] שמירת תוצאות מסוכמות בלבד, ללא transcript.
 
 ## שלב 4 — פיילוט הזיכרון ב־`misparim`
-### A — Baseline על המצב הישן
-- [ ] לבצע P1: משימה קטנה עם preview.
-- [ ] לבצע P2: משימה בינונית עם typecheck/build/preview.
-- [ ] לבצע P3: חקירת bug/repository, read-only תחילה.
-- [ ] להתחיל כל משימה ב־session חדש.
-- [ ] להשתמש באותו model/effort במשימת ההשוואה המקבילה.
-- [ ] לתעד זמן, `/usage`/context, קבצים, תיקונים ובדיקות.
+### A — Baseline ישן
+- [ ] לבצע את שלוש משימות ה־baseline על `misparim/main` ב־SHA הקבוע.
+- [ ] לא להשתמש בענף מועמד השינוי במהלך המדידה.
 
-### B — מועמד שינוי מוכן, לא ממוזג
+### B — מועמד שינוי מוכן
 - [x] ענף `pilot/claude-memory-v1` ו־PR #1.
 - [x] `CURRENT_STATE` קצר.
 - [x] צמצום כפילויות.
@@ -78,48 +63,101 @@
 - [ ] review אחרון לאחר baseline.
 - [ ] החלטת merge מפורשת.
 
-### C — Post-change והשוואה
+### C — Post-change
 - [ ] שלוש משימות מקבילות לאחר merge מאושר.
 - [ ] השוואת context/tokens, זמן, תיקונים, רגרסיות ומעורבות יניב.
 - [ ] החלטה: keep, adjust או revert.
 
-## שלב 5 — פיילוט הרחבה אחד
-השלב מתחיל רק לאחר inventory ובחירת בעיה מדידה.
+## שלב 5 — Skill ראשון: `capture-requirement`
+- [ ] לכתוב specification קצר.
+- [ ] להגדיר `disable-model-invocation: true`.
+- [ ] להגדיר Read/Grep בלבד בשלב הזיהוי.
+- [ ] לסווג requirement / preference / contract / decision / state / task / sensitive.
+- [ ] לחפש כפילות וסתירה.
+- [ ] להציע ניסוח קנוני, scope, מיקום ומה יוחלף.
+- [ ] לא לכתוב בלי אישור יניב.
+- [ ] למדוד פחות חזרות, אפס כפילויות ואפס דרישות קריטיות שנשכחו.
+- [ ] להחליט keep / adjust / remove.
 
-### סדר מועמדים
-1. [ ] TypeScript LSP Plugin רשמי בפרויקט אחד.
-2. [ ] Permission profile בטוח ומצומצם.
-3. [ ] Skill ידני אחד: `safe-change` או `ui-verify`.
-4. [ ] Subagent/Skill `repo-audit` read-only.
-5. [ ] Skill `handoff`.
+## שלב 6 — בטיחות ושינוי נכון
+לפי החיכוך שנמדד:
+- [ ] פיילוט `safe-change` ידני; או
+- [ ] Permission profile מצומצם.
 
-### תנאי פיילוט
-- [ ] baseline לפני התקנה.
-- [ ] מקור ו־commit מאומתים.
-- [ ] review של permissions, code ו־dependencies.
-- [ ] מדד הצלחה ו־rollback.
-- [ ] התקנה בפרויקט אחד בלבד.
-- [ ] החלטת keep/remove לפני הרחבה.
+### Permission profile
+- [ ] Deny ל־secrets, credentials, force push, reset/clean ומחיקה רחבה.
+- [ ] Allow ל־Git read, tests/typecheck/build ידועים וקריאה לא־רגישה.
+- [ ] Ask ל־push, merge, deploy, DB, auth ופעולות system/device.
+- [ ] הסרת הרשאות merge רחבות שאינן מוצדקות.
 
-## שלב 6 — הרחבה עתידית
-- [ ] להתאים Tier לכל פרויקט.
-- [ ] לבנות `math-rtl-verify` רק לאחר ראיות חוזרות.
-- [ ] לשקול Hook קטן רק לאחר ש־permissions אינן מספיקות.
-- [ ] לחבר MCP רק לחיבור שחוסך עבודה ידנית חוזרת.
-- [ ] להגדיר audit חודשי read-only לרכיבים שלא היו בשימוש.
-- [ ] להפיק דוח שיפור לאחר חודש שימוש.
+### Hook
+- [ ] נשקל רק אם permissions או tests אינם מספיקים.
+- [ ] Hook קטן, testable וללא build כבד.
+
+## שלב 7 — פיילוטי יעילות וכלים
+### TypeScript LSP
+- [ ] אימות Plugin רשמי, source, dependencies ויכולת הסרה.
+- [ ] התקנה בפרויקט TypeScript אחד בלבד.
+- [ ] השוואת references, שגיאות, זמן וקבצים שנקראו.
+
+### `ui-verify`
+- [ ] פיילוט בפרויקט אחד עם RTL/A4/PDF.
+- [ ] preview, viewports, screenshots, console/network ו־clipping.
+- [ ] דיווח evidence ומה לא אומת.
+
+### `repo-audit`
+- [ ] Subagent/Skill read-only למחקר רועש.
+- [ ] ללא edits או push.
+
+## שלב 8 — Skills נוספים לפי צורך מוכח
+- [ ] `handoff` למעבר בין sessions ומחשבים.
+- [ ] `ingest-real-files` ל־PDF/DOCX עם dry-run ו־hashes.
+- [ ] `math-rtl-verify` רק לאחר צורך חוזר בכמה פרויקטים.
+- [ ] MCP מצומצם רק לחיבור שמחליף עבודה ידנית חוזרת.
+
+## שלב 9 — הרחבה לפי Tier
+- [ ] Tier A — פרויקט קטן: `CLAUDE.md` קצר ובדיקות בסיסיות.
+- [ ] Tier B — מוצר פעיל: state חי, Rules תחומיים, preview ו־Skill מצומצם.
+- [ ] Tier C — מערכת רגישה: truth gates, draft PR, permissions, evidence חי ו־High-Risk Lane.
+- [ ] כל רכיב שהוכח עובר לריפו נוסף אחד בלבד בכל פעם.
+
+## שלב 10 — ביקורת חודשית
+- [ ] גרסת Claude Code.
+- [ ] Skills, Plugins, Hooks ו־MCP פעילים.
+- [ ] רכיבים שלא היו בשימוש.
+- [ ] גודל `CLAUDE.md`, auto memory ו־skill listing.
+- [ ] דרישות כפולות או סותרות.
+- [ ] state מיושן.
+- [ ] מידע רגיש.
+- [ ] הצעת הסרה או עדכון בלבד—not שינוי אוטומטי.
 
 ## שערים שאסור לדלג עליהם
 - אין התקנת bundle גדול לפני פיילוט צר.
 - אין Agent Teams כברירת מחדל.
 - אין Plugin קהילתי בלי source review ו־SHA.
 - אין Skill עם side effects בהפעלה אוטומטית.
-- אין טענת חיסכון בלי מדידה.
+- אין טענת חיסכון בלי baseline.
 - אין merge ל־`misparim#1` לפני baseline, review ודיווח.
+- אין workflow מתוזמן שמשכתב כללים או דוחף קוד ל־`main`.
+- אין מידע רגיש בזיכרון ציבורי.
+
+## מדדי הצלחה לאחר חודש
+- פחות דרישות שיניב מסביר מחדש.
+- אפס דרישה קריטית שנשכחה בפיילוט.
+- אפס כפילות חדשה בזיכרון.
+- ירידה של 20% בזמן פתיחה/הבנה או בשימוש, או שיפור איכות ברור באותה עלות.
+- פחות commits, PRs ותיקוני המשך למשימה.
+- פחות state מיושן ומיזוגים ללא evidence.
+- אפס מידע רגיש חדש ב־Git ציבורי.
+- כל Skill ניתן להסרה ללא פגיעה בפרויקט.
 
 ## מסמכי שליטה
 - כללים: `CLAUDE.md`.
 - מצב חי: `CURRENT_STATE.md`.
+- תוכנית מלאה: `docs/PERSONAL_WORK_SYSTEM_PLAN.md`.
+- מדריך יומי: `docs/YANIV_DAILY_GUIDE.md`.
 - מחקר רשמי: `docs/OFFICIAL_CLAUDE_CODE_FINDINGS.md`.
+- מערכת זיכרון: `research/MEMORY_SYSTEM_REQUIREMENTS.md`.
+- דפוסי עבודה: `research/CLAUDE_CODE_WORK_PATTERNS.md`.
 - מועמדי הרחבות: `research/EXTENSION_CANDIDATES.md`.
 - פיילוט: `docs/PILOT_MISPARIM_READINESS.md` ו־Issue #12.
