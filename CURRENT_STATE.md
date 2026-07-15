@@ -5,56 +5,79 @@
 ## זהות ותשתית
 - שם המיזם: **קלוטקורד**.
 - כתובת הריפו הנוכחית: `yanivmizrachiy/colors`.
-- ענף הפעילות הראשי: `main`.
-- התוכן המקורי של `colors` נשמר בענף `archive/colors-original-2026-07-14`.
-- הריפו ציבורי; אין לשמור בו מידע אישי, secrets או נתוני תלמידים.
-- Rename של ה־slug ל־`klotkord` ושינוי Visibility דורשים פעולה דרך הגדרות GitHub או כלי מתאים.
+- ענף ראשי: `main`.
+- התוכן המקורי של `colors` שמור בענף `archive/colors-original-2026-07-14`.
+- הריפו ציבורי; נשמר בו רק מידע כללי ולא־רגיש.
 
-## מבנה הכללים והידע
-- `CLAUDE.md` הוא דף הכללים המחייב היחיד.
-- `CURRENT_STATE.md` הוא מקור המצב החי.
-- `DECISIONS.md` הוא היסטוריית החלטות בלבד.
-- `docs/` ו־`research/` הם מחקר, ראיות ותוכניות בלבד.
-- פרומפט ההפעלה הישן של מחשב הסלון הוסר.
-- מסמך כללי אבטחה כפול הוסר לאחר ריכוז החובות ב־`CLAUDE.md`.
+## מבנה מקור האמת
+- `CLAUDE.md` — דף הכללים המחייב היחיד.
+- `CURRENT_STATE.md` — המצב החי בלבד.
+- `docs/PERSONAL_WORK_SYSTEM_PLAN.md` — תוכנית העבודה המלאה גרסה 2.
+- `docs/ROADMAP.md` — שלבי היישום.
+- `docs/YANIV_DAILY_GUIDE.md` — מדריך שימוש קצר.
+- `DECISIONS.md` — היסטוריית החלטות בלבד.
+- `docs/` ו־`research/` — מחקר, ראיות ותכנון.
 
-## מה הושלם בקלוטקורד
-- דוחות מחקר על שבעה ריפוים.
-- תוכנית עבודה אישית גרסה 1 ומדריך יומי.
-- חבילת פיילוט מדידה ל־`misparim`.
-- תבנית task brief ותבנית session measurement.
-- מחקר רשמי מעודכן על Memory, Rules, Skills, Hooks, Subagents, Agent Teams, MCP, Plugins, permissions, sandbox, checkpoints, scheduled tasks, context ועלויות.
-- רשם מועמדי הרחבות מותאם לעבודה של יניב: `research/EXTENSION_CANDIDATES.md`.
-- דף כללים יחיד ומקצועי בשם קלוטקורד.
+## מה הושלם
+- מחקר העבודה בפועל בריפו הליבה הגדולים.
+- מחקר רשמי של Memory, Rules, Skills, Hooks, Plugins, MCP, Subagents, Agent Teams, permissions, sandbox, sessions, checkpoints ועלויות.
+- ניקוי מקורות הוראות כפולים וישנים.
+- תוכנית עבודה אישית **קלוטקורד גרסה 2**.
+- מערכת דרישות לזיכרון אישי ומתמשך.
+- מסמך דפוסי העבודה של יניב עם Claude Code.
+- דירוג Skills ו־Plugins לפי ערך, סיכון, context ו־rollback.
+- מדריך יומי ו־Roadmap מעודכנים.
+- `research/IMPLEMENTATION_PRIORITY.md` הכפול נמחק; סדר היישום נמצא כעת רק ב־Roadmap ובתוכנית גרסה 2.
 
-## מצב `misparim`
-- `misparim/main` נשאר בסיס baseline ב־SHA `ce020c8fcf026f0ba1909f5844a49ab7ac0aafe3`.
-- מועמד שינוי: `pilot/claude-memory-v1` ב־SHA `4c03a1cc02ebe72856a320ec7d71092e62d38bec`.
-- PR: `yanivmizrachiy/misparim#1`.
-- ה־PR פתוח, mergeable ו־Vercel success.
-- 11 קובצי זיכרון/Markdown בלבד השתנו; אין שינוי קוד מוצר.
-- ה־PR לא מוזג.
+## ההחלטות המרכזיות
+- זיכרון דרישות הוא היעד הראשון.
+- ה־Skill הראשון יהיה `capture-requirement`, לאחר inventory ו־baseline.
+- דרישה חדשה אינה נשמרת אוטומטית: מסווגים, מחפשים סתירה, מציעים ניסוח ומקבלים אישור.
+- Sonnet הוא ברירת המחדל; Opus שמור לתכנון מורכב, אבטחה ו־root cause.
+- משימה משמעותית אחת בכל session.
+- Permissions קודמות ל־Hooks כאשר הן מספיקות.
+- לא מתקינים Skill pack או Plugin לפי סרטון בלבד.
+- אין Agent Teams כברירת מחדל.
+- build/PASS אינם שווים live verified או release ready.
+- merge, deploy, DB, auth ופעולות מכשיר דורשים שער מפורש.
 
-## מסקנות ביניים על הרחבות
-- TypeScript LSP רשמי הוא מועמד בעדיפות גבוהה לפיילוט.
-- Permissions מצומצמות קודמות ל־Hook כאשר הן מספיקות.
-- Skills ראשונים אפשריים: `safe-change`, `ui-verify`, `repo-audit`, `handoff`.
-- Subagent מתאים למחקר read-only ורועש.
-- Agent Teams אינם ברירת מחדל בגלל עלות ותיאום.
-- MCP נשמר רק לחיבור שמחליף עבודה ידנית חוזרת; `gh` CLI מועדף כאשר הוא מספיק.
-- אין התקנת Skill pack או Plugin קהילתי לפני review של source, SHA, הרשאות, context ו־rollback.
+## מצב פיילוט `misparim`
+- baseline נשמר ב־`misparim/main` ב־SHA `ce020c8fcf026f0ba1909f5844a49ab7ac0aafe3`.
+- מועמד שינוי נמצא בענף `pilot/claude-memory-v1` וב־PR #1.
+- ה־PR פתוח ולא ממוזג.
+- אין merge לפני inventory, שלוש מדידות baseline, review ודיווח.
 
-## מה עדיין חסר
-- שלוש מדידות baseline אמיתיות ב־`misparim`.
-- inventory מקומי מסונן: גרסת Claude Code ושמות Skills, Plugins, Hooks, MCP ו־settings פעילים.
-- אימות שם ה־Plugin הרשמי המדויק ל־TypeScript LSP ופיילוט בפרויקט אחד.
-- בחירת Skill ראשון לפי חיכוך שנמדד בפועל.
-- שלוש מדידות post-change לאחר החלטת merge.
-- תוכנית עבודה סופית גרסה 2 לאחר השלמת המחקר והמדידות.
-- Rename של הריפו ל־`klotkord` דרך GitHub.
+## השלב הפעיל הבא
+### 1. Inventory מקומי מסונן
+נבדוק רק:
+- גרסת Claude Code.
+- user settings שאינם רגישים.
+- auto memory וקבצים שנטענים.
+- שמות Skills, Plugins, Hooks ו־MCP.
+- permissions מסוג allow / ask / deny.
+- Windows מול WSL2 לצורך sandbox.
 
-## הצעד הבא
-1. להשלים ביקורת diff של ניקוי קלוטקורד ולמזג אותה.
-2. לבצע inventory מקומי בטוח וקצר.
-3. לבחור שלוש משימות baseline אמיתיות.
-4. רק לאחר המדידות לבחור פיילוט הרחבה אחד.
+לא נקרא secrets, transcripts, cookies או ערכי env.
+
+### 2. Baseline
+שלוש משימות אמיתיות:
+- שינוי UI קטן.
+- שינוי קוד בינוני.
+- audit read-only.
+
+נמדוד `/usage`, `/context`, זמן, קבצים, תיקונים ורגרסיות.
+
+### 3. פיילוטים
+1. פיילוט הזיכרון ב־`misparim`.
+2. `capture-requirement`.
+3. `safe-change` או Permission profile.
+4. TypeScript LSP רשמי בפרויקט אחד.
+5. `ui-verify` בפרויקט אחד.
+
+## מה עדיין לא בוצע
+- לא הותקן Skill, Plugin, Hook או MCP חדש.
+- לא שונו הגדרות Claude Code המקומיות.
+- לא בוצעו מדידות baseline.
+- לא מוזג `misparim#1`.
+- לא שונה שם הריפו בפועל ל־`klotkord`.
+- לא התקבלה החלטה אם להפוך את קלוטקורד ל־Private.
